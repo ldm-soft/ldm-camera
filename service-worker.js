@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "/ldm-camera/precache-manifest.54da498f21c14fb319551c86d0a6db6e.js"
+  "/ldm-camera/precache-manifest.374776f6ea08601d95fde31348f30a4e.js"
 );
 
 self.addEventListener('message', (event) => {
