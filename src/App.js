@@ -64,7 +64,7 @@ function App() {
   const [deviceId, setDeviceId] = React.useState({});
   const [devices, setDevices] = React.useState([]);
   const [indexDevice, setIndexDevice] = React.useState(0);
-  const [logApp, setLogApp] = React.useState("");
+  // const [logApp, setLogApp] = React.useState("");s
   function checkAllowCamera() {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
@@ -85,7 +85,7 @@ function App() {
           var log = "";
           devices.forEach((device) => {
             log += JSON.stringify(device) + "\r\n";
-            if (device.kind === "videoinput") {
+            if (device.kind == "videoinput") {
               arr.push(device);
             }
           });
@@ -102,12 +102,15 @@ function App() {
 
   //
   function handleClick() {
+    let indexNew = indexDevice;
     if (indexDevice < devices.length - 1) {
-      setIndexDevice(indexDevice + 1);
+      indexNew++;
     } else {
-      setIndexDevice(0);
+      indexNew = 0;
     }
-    setDeviceId(devices[indexDevice].deviceId);
+    console.log(indexNew);
+    setIndexDevice(indexNew);
+    setDeviceId(devices[indexNew].deviceId);
   }
   return (
     <div className="App">
