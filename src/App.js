@@ -42,13 +42,12 @@ function App() {
       // Make Detections
       const obj = await net.detect(video);
       let count = 0;
-      console.log(Object.values(obj).forEach((item)=>{
-        console.log(item.class);
+      Object.values(obj).forEach((item)=>{
         if(item.class =='person')
         {
           count++;
         }
-      }));
+      });
       setPersion(count);
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
@@ -56,17 +55,65 @@ function App() {
     }
   };
 
-  useEffect(()=>{runCoco()},[]);
-
+  useEffect(()=>{runCoco()},[]); 
+  useEffect(()=>{loadDevices()},[]); 
+  const [deviceId, setDeviceId] = React.useState({});
+  const [devices, setDevices] = React.useState([]);
+  const [indexDevice, setIndexDevice] = React.useState(0);
+  const [logApp, setLogApp] = React.useState('');
+  function loadDevices()
+  {
+    console.log('loadDevices');
+    if (!navigator.mediaDevices?.enumerateDevices) {
+      console.log("enumerateDevices() not supported.");
+    } else {
+      // List cameras and microphones.
+      navigator.mediaDevices.enumerateDevices()
+        .then((devices) => {
+          var arr =[];
+          var log='';
+          devices.forEach((device) => {
+            log += JSON.stringify(device) + '\r\n';
+            if(device.kind === 'videoinput')
+            {
+              arr.push(device);
+            }
+          });
+          setDevices(arr);
+          setLogApp(log);
+        })
+        .catch((err) => {
+          console.error(`${err.name}: ${err.message}`);
+        });
+        
+    }
+  }
+  function handleClick()
+  {
+    if(indexDevice < devices.length - 1)
+    {
+      setIndexDevice(indexDevice + 1);
+    }
+    else
+    {
+      setIndexDevice(0);
+    }
+    setDeviceId(devices[indexDevice].deviceId);
+  }
   return (
     <div className="App">
       <header className="App-header">
         <div className="persion">
-          Person: {person}
+        Camera: {indexDevice + 1} - Person: {person}
         </div>
+        <div className="logApp">Log: {logApp}</div>
+        <div className="devicesButton" onClick={handleClick}>Change Camera -{indexDevice + 1}</div>
         <Webcam
           ref={webcamRef}
           muted={true} 
+          videoConstraints={{
+            deviceId: deviceId
+          }}
           style={{
             position: "absolute",
             marginLeft: "auto",
