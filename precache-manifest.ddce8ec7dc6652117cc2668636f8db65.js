@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8f40793395817be6f474fc43376a4db2",
+    "revision": "d51105dd1b4466e9b3be6cb5edfcd288",
     "url": "/ldm-camera/index.html"
   },
   {
-    "revision": "52726d36ae2c40ba902a",
+    "revision": "766bc01d14152af8ab07",
     "url": "/ldm-camera/static/css/main.674d8579.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/ldm-camera/static/js/2.26b792cf.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "52726d36ae2c40ba902a",
-    "url": "/ldm-camera/static/js/main.dd56eb05.chunk.js"
+    "revision": "766bc01d14152af8ab07",
+    "url": "/ldm-camera/static/js/main.c44412ce.chunk.js"
   },
   {
     "revision": "c8da996c75ebec829571",
