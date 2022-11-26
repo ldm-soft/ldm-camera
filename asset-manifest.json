@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/ldm-camera/static/css/main.674d8579.chunk.css",
-    "main.js": "/ldm-camera/static/js/main.c44412ce.chunk.js",
-    "main.js.map": "/ldm-camera/static/js/main.c44412ce.chunk.js.map",
+    "main.css": "/ldm-camera/static/css/main.2bc26fce.chunk.css",
+    "main.js": "/ldm-camera/static/js/main.b814a205.chunk.js",
+    "main.js.map": "/ldm-camera/static/js/main.b814a205.chunk.js.map",
     "runtime-main.js": "/ldm-camera/static/js/runtime-main.c6abca29.js",
     "runtime-main.js.map": "/ldm-camera/static/js/runtime-main.c6abca29.js.map",
     "static/js/2.26b792cf.chunk.js": "/ldm-camera/static/js/2.26b792cf.chunk.js",
     "static/js/2.26b792cf.chunk.js.map": "/ldm-camera/static/js/2.26b792cf.chunk.js.map",
     "index.html": "/ldm-camera/index.html",
-    "precache-manifest.ddce8ec7dc6652117cc2668636f8db65.js": "/ldm-camera/precache-manifest.ddce8ec7dc6652117cc2668636f8db65.js",
+    "precache-manifest.77776182deebdba63169695233ee10bd.js": "/ldm-camera/precache-manifest.77776182deebdba63169695233ee10bd.js",
     "service-worker.js": "/ldm-camera/service-worker.js",
-    "static/css/main.674d8579.chunk.css.map": "/ldm-camera/static/css/main.674d8579.chunk.css.map",
+    "static/css/main.2bc26fce.chunk.css.map": "/ldm-camera/static/css/main.2bc26fce.chunk.css.map",
     "static/js/2.26b792cf.chunk.js.LICENSE.txt": "/ldm-camera/static/js/2.26b792cf.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
     "static/js/runtime-main.c6abca29.js",
     "static/js/2.26b792cf.chunk.js",
-    "static/css/main.674d8579.chunk.css",
-    "static/js/main.c44412ce.chunk.js"
+    "static/css/main.2bc26fce.chunk.css",
+    "static/js/main.b814a205.chunk.js"
   ]
 }
