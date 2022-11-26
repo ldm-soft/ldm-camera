@@ -37,11 +37,20 @@
   }
 }
 
-.persion {
+.person {
     z-index: 10;
     left: 0;
     position: fixed;
-    top: 0;
+    top: 30px;
+}
+.alert-red{
+  color: red;
+}
+.camera-info {
+  z-index: 10;
+  left: 0;
+  position: fixed;
+  top: 0;
 }
 .devicesButton {
   z-index: 10;
@@ -51,9 +60,12 @@
   background-color: cyan;
   border-radius: 4px;
   border: 2px solid black ;
-  cursor: pointer;
+  /* cursor: pointer; */
+  height: 40px;
+  font-size: 20px;
+  color: black;
 }
-.devicesButton:hover{
+.devicesButton:focus{
   background-color: yellow;
 }
 .logApp{

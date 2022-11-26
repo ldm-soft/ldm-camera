@@ -5,11 +5,12 @@ import * as cocossd from "@tensorflow-models/coco-ssd";
 import Webcam from "react-webcam";
 import "./App.css";
 import { drawRect } from "./utilities";
+import { Helmet } from "react-helmet";
 
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
-  const [person, setPersion] = useState(0)
+  const [person, setPersion] = useState(0);
   // Main function
   const runCoco = async () => {
     const net = await cocossd.load();
@@ -42,77 +43,98 @@ function App() {
       // Make Detections
       const obj = await net.detect(video);
       let count = 0;
-      Object.values(obj).forEach((item)=>{
-        if(item.class =='person')
-        {
+      Object.values(obj).forEach((item) => {
+        if (item.class == "person") {
           count++;
         }
       });
       setPersion(count);
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
-      drawRect(obj, ctx); 
+      drawRect(obj, ctx);
     }
   };
 
-  useEffect(()=>{runCoco()},[]); 
-  useEffect(()=>{loadDevices()},[]); 
+  useEffect(() => {
+    runCoco();
+  }, []);
+  useEffect(() => {
+    checkAllowCamera();
+  }, []);
   const [deviceId, setDeviceId] = React.useState({});
   const [devices, setDevices] = React.useState([]);
   const [indexDevice, setIndexDevice] = React.useState(0);
-  const [logApp, setLogApp] = React.useState('');
-  function loadDevices()
-  {
-    console.log('loadDevices');
+  const [logApp, setLogApp] = React.useState("");
+  function checkAllowCamera() {
+    navigator.mediaDevices
+      .getUserMedia({ audio: true, video: true })
+      .then(function (stream) {
+        loadDevices();
+      });
+  }
+  function loadDevices() {
+    console.log("loadDevices");
     if (!navigator.mediaDevices?.enumerateDevices) {
       console.log("enumerateDevices() not supported.");
     } else {
       // List cameras and microphones.
-      navigator.mediaDevices.enumerateDevices()
+      navigator.mediaDevices
+        .enumerateDevices()
         .then((devices) => {
-          var arr =[];
-          var log='';
+          var arr = [];
+          var log = "";
           devices.forEach((device) => {
-            log += JSON.stringify(device) + '\r\n';
-            if(device.kind === 'videoinput')
-            {
+            log += JSON.stringify(device) + "\r\n";
+            if (device.kind === "videoinput") {
               arr.push(device);
             }
           });
           setDevices(arr);
-          setLogApp(log);
+          // setLogApp(log);
+          setDeviceId(devices[indexDevice].deviceId);
         })
         .catch((err) => {
           console.error(`${err.name}: ${err.message}`);
         });
-        
     }
   }
-  function handleClick()
-  {
-    if(indexDevice < devices.length - 1)
-    {
+  //
+
+  //
+  function handleClick() {
+    if (indexDevice < devices.length - 1) {
       setIndexDevice(indexDevice + 1);
-    }
-    else
-    {
+    } else {
       setIndexDevice(0);
     }
     setDeviceId(devices[indexDevice].deviceId);
   }
   return (
     <div className="App">
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>LDM SOFT</title>
+        <meta name="description" content="LDM-CAMERA" />
+        <link rel="icon" type="image/png" href="./icon/logo.png" />
+      </Helmet>
       <header className="App-header">
-        <div className="persion">
-        Camera: {indexDevice + 1} - Person: {person}
+        <div className="camera-info">
+          Camera: {indexDevice + 1} of {devices.length}
         </div>
-        <div className="logApp">Log: {logApp}</div>
-        <div className="devicesButton" onClick={handleClick}>Change Camera -{indexDevice + 1}</div>
+        <div className={`person ${person > 30 ? "alert-red" : ""}`}>
+          Person: {person}
+        </div>
+        {/* <div className="logApp">Log: {logApp}</div> */}
+        {devices.length > 1 && (
+          <button className="devicesButton" onClick={handleClick}>
+            Change Camera
+          </button>
+        )}
         <Webcam
           ref={webcamRef}
-          muted={true} 
+          muted={true}
           videoConstraints={{
-            deviceId: deviceId
+            deviceId: deviceId,
           }}
           style={{
             position: "absolute",
@@ -122,8 +144,8 @@ function App() {
             right: 0,
             textAlign: "center",
             zindex: 9,
-            width: '100%',
-            height: '100%',
+            width: "100%",
+            height: "100%",
           }}
         />
 
@@ -137,8 +159,8 @@ function App() {
             right: 0,
             textAlign: "center",
             zindex: 8,
-            width: '100%',
-            height: '100%',
+            width: "100%",
+            height: "100%",
           }}
         />
       </header>
