@@ -1,3 +1,6 @@
+// style = các thuộc tính hiển thị của thẻ trên màn hình web
+// console = phần hiển thị log khi sử dụng ứng dụng
+// ứng dụng tích hợp tính năng phân tích dữ liệu từ hình ảnh dựa theo thuật toán nhận diện của google.
 // Import dependencies
 import React, { useRef, useState, useEffect } from "react";
 import * as tf from "@tensorflow/tfjs";
@@ -12,51 +15,56 @@ function App() {
   const canvasRef = useRef(null);
   const [person, setPersion] = useState(0);
   // Main function
-  const runCoco = async () => {
+  const runMain = async () => {
     const net = await cocossd.load();
     console.log("Handpose model loaded.");
-    //  Loop and detect hands
+    //  Set thời gian re-load tìm kiếm người có trong khung hình đơn vị tính mili giây
+    //  Mặc định 10ms sẽ load 1 lần
     setInterval(() => {
       detect(net);
     }, 10);
   };
   const detect = async (net) => {
-    // Check data is available
+    // Kiểm tra data video trong khung hình tồn tại
+    // undefined = chưa tồn tại/chưa được định nghĩa
     if (
       typeof webcamRef.current !== "undefined" &&
       webcamRef.current !== null &&
       webcamRef.current.video.readyState === 4
     ) {
-      // Get Video Properties
+      // Lấy thông tin video
       const video = webcamRef.current.video;
       const videoWidth = webcamRef.current.video.videoWidth;
       const videoHeight = webcamRef.current.video.videoHeight;
 
-      // Set video width
+      // Thiết lập chiều cao/rộng cho khung hình video
       webcamRef.current.video.width = videoWidth;
       webcamRef.current.video.height = videoHeight;
 
-      // Set canvas height and width
+      // Thiết lập chiều cao/rộng cho khung hình viền đối tượng khi phát hiện.
       canvasRef.current.width = videoWidth;
       canvasRef.current.height = videoHeight;
 
-      // Make Detections
-      const obj = await net.detect(video);
+      // Phân tích và phát hiện đối tượng trong khung hình - Tối đa được thiết lập là 100
+      //(*Tùy số lượng đối tượng cần phát hiện mà thay đổi thông số này)
+      const obj = await net.detect(video,100);
       var objectPersion = [];
       Object.values(obj).forEach((item) => {
+        //Các đối tượng là con người(person) sẽ được chọn lọc và lấy ra ở bước này.
         if (item.class == "person") {
           objectPersion.push(item);
         }
       });
+      //Set số lượng đối tượng là con người được phát hiện trong hình hiển thị lên màn hình
       setPersion(objectPersion.length);
-      // Draw mesh
+      // Thực hiện vẽ viền những đối tượng được phát hiện là con người.
       const ctx = canvasRef.current.getContext("2d");
       drawRect(objectPersion, ctx);
     }
   };
 
   useEffect(() => {
-    runCoco();
+    runMain();
   }, []);
   useEffect(() => {
     checkAllowCamera();
@@ -64,7 +72,7 @@ function App() {
   const [deviceId, setDeviceId] = React.useState({});
   const [devices, setDevices] = React.useState([]);
   const [indexDevice, setIndexDevice] = React.useState(0);
-  // const [logApp, setLogApp] = React.useState("");s
+  //Kiển tra camera được chấp nhận sử dụng hay chưa.
   function checkAllowCamera() {
     navigator.mediaDevices
       .getUserMedia({ audio: true, video: true })
@@ -72,35 +80,34 @@ function App() {
         loadDevices();
       });
   }
+  // Load lên tất cả thiết bị là camera được xuất hiện
   function loadDevices() {
-    console.log("loadDevices");
     if (!navigator.mediaDevices?.enumerateDevices) {
-      console.log("enumerateDevices() not supported.");
+      console.log("enumerateDevices() không được hỗ trợ.");
     } else {
       // List cameras and microphones.
       navigator.mediaDevices
         .enumerateDevices()
         .then((devices) => {
           var arr = [];
-          var log = "";
           devices.forEach((device) => {
-            log += JSON.stringify(device) + "\r\n";
+            //Kiểm tra và lấy ra danh sách các thiết bị là camera(tương ứng videoinput)
             if (device.kind == "videoinput") {
               arr.push(device);
             }
           });
+          //Set danh sách thiết bị là camera
           setDevices(arr);
-          // setLogApp(log);
+          //Set ID thiết bị hiển thị lên màn hình
           setDeviceId(devices[indexDevice].deviceId);
         })
         .catch((err) => {
+          // Xuất log nếu gặp lỗi
           console.error(`${err.name}: ${err.message}`);
         });
     }
   }
-  //
-
-  //
+  // Sự kiện click chuyển đổi camera
   function handleClick() {
     let indexNew = indexDevice;
     if (indexDevice < devices.length - 1) {
@@ -127,7 +134,6 @@ function App() {
         <div className={`person ${person > 30 ? "alert-red" : ""}`}>
           Person: {person}
         </div>
-        {/* <div className="logApp">Log: {logApp}</div> */}
         {devices.length > 1 && (
           <button className="devicesButton" onClick={handleClick}>
             Change Camera
