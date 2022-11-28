@@ -42,16 +42,16 @@ function App() {
 
       // Make Detections
       const obj = await net.detect(video);
-      let count = 0;
+      var objectPersion = [];
       Object.values(obj).forEach((item) => {
         if (item.class == "person") {
-          count++;
+          objectPersion.push(item);
         }
       });
-      setPersion(count);
+      setPersion(objectPersion.length);
       // Draw mesh
       const ctx = canvasRef.current.getContext("2d");
-      drawRect(obj, ctx);
+      drawRect(objectPersion, ctx);
     }
   };
 

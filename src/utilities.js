@@ -1,10 +1,10 @@
 export const drawRect = (detections, ctx) =>{
   // Loop through each prediction
-  detections.forEach(prediction => {
+  detections.forEach((prediction, index) => {
 
     // Extract boxes and classes
     const [x, y, width, height] = prediction['bbox']; 
-    const text = prediction['class']; 
+    const text = `[${index + 1}]`;//prediction['class']; 
 
     // Set styling
     const color = Math.floor(Math.random()*16777215).toString(16);
