@@ -141,10 +141,13 @@ function App() {
         )}
         <Webcam
           ref={webcamRef}
-          muted={true}
+          muted={false}
+          audio={false}
+          video={true}
           videoConstraints={{
             deviceId: deviceId,
           }}
+          className="video"
           style={{
             position: "absolute",
             marginLeft: "auto",
@@ -156,10 +159,13 @@ function App() {
             width: "100%",
             height: "100%",
           }}
+          mirrored={true}
         />
 
         <canvas
           ref={canvasRef}
+          mirrored={true}
+          className='video'
           style={{
             position: "absolute",
             marginLeft: "auto",
