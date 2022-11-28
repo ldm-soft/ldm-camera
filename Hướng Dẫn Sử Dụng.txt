@@ -1,0 +1,42 @@
+- Download & cài đặt phần mềm phát triển(Công cụ để tạo ra phần mềm) sau:
+1.  Phần mềm Visual Code.
+    Link download: https://code.visualstudio.com/
+2.  Phần mềm môi trường Node.js
+    Link download: https://nodejs.org/
+--------------------------------------------------------------------------------------------------------------------------------
+Tài liệu về ngôn ngữ thì có thể tham khảo:
+1.  Rect: Link giới thiệu về ngôn ngữ https://reactjs.org/
+Hoặc tìm hiểu ở google với từ khóa "React".
+2.  Ngôn ngữ web như HTML, CSS, Javascript.
+--------------------------------------------------------------------------------------------------------------------------------
+Một số trang hỗ trợ để lưu source code/ build source code miễn phí có thể tìm hiểu như:
+- https://github.com/
+--------------------------------------------------------------------------------------------------------------------------------
+Công cụ để tạo ra phần mềm Visual Code.
+Để chạy được ứng dụng cần có domain để build web, hoặc sử dụng miễn phí nền tảng do Github cung cấp.
+Thiết bị cần có để thực hiện xây dựng ứng dụng: 
+- Thiết bị phát triển lập trình(code) Laptop/PC ram >= 4gb, Chíp >= Core I3.
+- Thiết bị cần có để sử dụng ứng dụng: Các thiết bị vào được trình duyệt web và có camera như Điện thoại, laptop,..
+Hoặc PC được kết nối với camera.
+Lưu ý: Camera có độ phân giải cao(>= 2MP) thì thuật toán phân tích phát hiện đối tượng có tính chính xác cao hơn thiết bị có camera độ phân giải thấp.
+=================================================================================================================================
+Tiến hành download và chạy source code ở máy tính:
+1. Download source về thư mục bất kỳ ở máy tính
+2. Mở phần mềm visual code
+3. Ở phần mềm visual code tiến hành chọn:
+Vào mục File => Chọn [Open folder] => Chọn thư mục để source vừa download về ở mục 1.
+4. Case thư mục hiển thị ở visual code là toàn bộ file của source.
+Tiến hành vào mục [src]: đây là thư mục chính để code phát triển
+File: App.js là file code chính để hiển thị lên màn hình web.
+File: utilities.js là file xử lý vẽ đối tượng được nhận diện.
+5: Tiến hành chạy theo lệnh theo cú pháp sau:
+Open PowerShell ở mode Admin=> chạy lệnh: "Set-ExecutionPolicy Unrestricted" => Chọn "Y"
+Quay lại màn hình Visual Code: Chọn "Terminal" => chọn "New Terminal". 
+Tiến hành cài môi trường yarn bằng lệnh ở màn hình Terminal(Chạy theo thứ tự lệnh từ trên xuống):
+[Phần lệnh ở mục này chỉ cần chạy lần đầu khi download source về]
+    npm install -g yarn
+    yarn install
+[Lệnh start thì sẽ chạy mỗi khi cần start source để chạy ở local]
+    yarn start
+Lưu ý: Sau khi start thành công thì truy cập vào link ở local sau để xem kết quả:
+http://localhost:4200/

@@ -75,7 +75,7 @@ function App() {
   //Kiển tra camera được chấp nhận sử dụng hay chưa.
   function checkAllowCamera() {
     navigator.mediaDevices
-      .getUserMedia({ audio: true, video: true })
+      .getUserMedia({video: true })
       .then(function (stream) {
         loadDevices();
       });
@@ -124,7 +124,7 @@ function App() {
       <Helmet>
         <meta charSet="utf-8" />
         <title>LDM SOFT</title>
-        <meta name="description" content="LDM-CAMERA" />
+        <meta name="description" content="camera-ai" />
         <link rel="icon" type="image/png" href="./icon/logo.png" />
       </Helmet>
       <header className="App-header">
