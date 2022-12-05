@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "http://localhost:4200/static/css/main.def68fae.chunk.css",
-    "main.js": "http://localhost:4200/static/js/main.7f2944c7.chunk.js",
-    "main.js.map": "http://localhost:4200/static/js/main.7f2944c7.chunk.js.map",
-    "runtime-main.js": "http://localhost:4200/static/js/runtime-main.24d4eba7.js",
-    "runtime-main.js.map": "http://localhost:4200/static/js/runtime-main.24d4eba7.js.map",
-    "static/js/2.ef52ad23.chunk.js": "http://localhost:4200/static/js/2.ef52ad23.chunk.js",
-    "static/js/2.ef52ad23.chunk.js.map": "http://localhost:4200/static/js/2.ef52ad23.chunk.js.map",
-    "index.html": "http://localhost:4200/index.html",
-    "precache-manifest.eaa7adc4f67db230d0a67d5f8405865b.js": "http://localhost:4200/precache-manifest.eaa7adc4f67db230d0a67d5f8405865b.js",
-    "service-worker.js": "http://localhost:4200/service-worker.js",
-    "static/css/main.def68fae.chunk.css.map": "http://localhost:4200/static/css/main.def68fae.chunk.css.map",
-    "static/js/2.ef52ad23.chunk.js.LICENSE.txt": "http://localhost:4200/static/js/2.ef52ad23.chunk.js.LICENSE.txt",
-    "static/media/person.mp3": "http://localhost:4200/static/media/person.d5b99dce.mp3",
-    "static/media/transport.mp3": "http://localhost:4200/static/media/transport.56531d97.mp3"
+    "main.css": "/static/css/main.def68fae.chunk.css",
+    "main.js": "/static/js/main.7f2944c7.chunk.js",
+    "main.js.map": "/static/js/main.7f2944c7.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.743d20cc.js",
+    "runtime-main.js.map": "/static/js/runtime-main.743d20cc.js.map",
+    "static/js/2.ef52ad23.chunk.js": "/static/js/2.ef52ad23.chunk.js",
+    "static/js/2.ef52ad23.chunk.js.map": "/static/js/2.ef52ad23.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.34daaf5c2654bd0cfc83783d37eed27e.js": "/precache-manifest.34daaf5c2654bd0cfc83783d37eed27e.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.def68fae.chunk.css.map": "/static/css/main.def68fae.chunk.css.map",
+    "static/js/2.ef52ad23.chunk.js.LICENSE.txt": "/static/js/2.ef52ad23.chunk.js.LICENSE.txt",
+    "static/media/person.mp3": "/static/media/person.d5b99dce.mp3",
+    "static/media/transport.mp3": "/static/media/transport.56531d97.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.24d4eba7.js",
+    "static/js/runtime-main.743d20cc.js",
     "static/js/2.ef52ad23.chunk.js",
     "static/css/main.def68fae.chunk.css",
     "static/js/main.7f2944c7.chunk.js"
