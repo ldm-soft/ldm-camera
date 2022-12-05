@@ -1,22 +1,24 @@
 {
   "files": {
-    "main.css": "/ldm-camera/static/css/main.74917ba4.chunk.css",
-    "main.js": "/ldm-camera/static/js/main.6e5b44fa.chunk.js",
-    "main.js.map": "/ldm-camera/static/js/main.6e5b44fa.chunk.js.map",
-    "runtime-main.js": "/ldm-camera/static/js/runtime-main.c6abca29.js",
-    "runtime-main.js.map": "/ldm-camera/static/js/runtime-main.c6abca29.js.map",
-    "static/js/2.5f4c2551.chunk.js": "/ldm-camera/static/js/2.5f4c2551.chunk.js",
-    "static/js/2.5f4c2551.chunk.js.map": "/ldm-camera/static/js/2.5f4c2551.chunk.js.map",
-    "index.html": "/ldm-camera/index.html",
-    "precache-manifest.6198cb3e08beb5ab4e06397383d551c2.js": "/ldm-camera/precache-manifest.6198cb3e08beb5ab4e06397383d551c2.js",
-    "service-worker.js": "/ldm-camera/service-worker.js",
-    "static/css/main.74917ba4.chunk.css.map": "/ldm-camera/static/css/main.74917ba4.chunk.css.map",
-    "static/js/2.5f4c2551.chunk.js.LICENSE.txt": "/ldm-camera/static/js/2.5f4c2551.chunk.js.LICENSE.txt"
+    "main.css": "http://localhost:4200/static/css/main.def68fae.chunk.css",
+    "main.js": "http://localhost:4200/static/js/main.7f2944c7.chunk.js",
+    "main.js.map": "http://localhost:4200/static/js/main.7f2944c7.chunk.js.map",
+    "runtime-main.js": "http://localhost:4200/static/js/runtime-main.24d4eba7.js",
+    "runtime-main.js.map": "http://localhost:4200/static/js/runtime-main.24d4eba7.js.map",
+    "static/js/2.ef52ad23.chunk.js": "http://localhost:4200/static/js/2.ef52ad23.chunk.js",
+    "static/js/2.ef52ad23.chunk.js.map": "http://localhost:4200/static/js/2.ef52ad23.chunk.js.map",
+    "index.html": "http://localhost:4200/index.html",
+    "precache-manifest.eaa7adc4f67db230d0a67d5f8405865b.js": "http://localhost:4200/precache-manifest.eaa7adc4f67db230d0a67d5f8405865b.js",
+    "service-worker.js": "http://localhost:4200/service-worker.js",
+    "static/css/main.def68fae.chunk.css.map": "http://localhost:4200/static/css/main.def68fae.chunk.css.map",
+    "static/js/2.ef52ad23.chunk.js.LICENSE.txt": "http://localhost:4200/static/js/2.ef52ad23.chunk.js.LICENSE.txt",
+    "static/media/person.mp3": "http://localhost:4200/static/media/person.d5b99dce.mp3",
+    "static/media/transport.mp3": "http://localhost:4200/static/media/transport.56531d97.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.c6abca29.js",
-    "static/js/2.5f4c2551.chunk.js",
-    "static/css/main.74917ba4.chunk.css",
-    "static/js/main.6e5b44fa.chunk.js"
+    "static/js/runtime-main.24d4eba7.js",
+    "static/js/2.ef52ad23.chunk.js",
+    "static/css/main.def68fae.chunk.css",
+    "static/js/main.7f2944c7.chunk.js"
   ]
 }
