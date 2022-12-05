@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/static/css/main.def68fae.chunk.css",
-    "main.js": "/static/js/main.7f2944c7.chunk.js",
-    "main.js.map": "/static/js/main.7f2944c7.chunk.js.map",
-    "runtime-main.js": "/static/js/runtime-main.743d20cc.js",
-    "runtime-main.js.map": "/static/js/runtime-main.743d20cc.js.map",
-    "static/js/2.ef52ad23.chunk.js": "/static/js/2.ef52ad23.chunk.js",
-    "static/js/2.ef52ad23.chunk.js.map": "/static/js/2.ef52ad23.chunk.js.map",
-    "index.html": "/index.html",
-    "precache-manifest.34daaf5c2654bd0cfc83783d37eed27e.js": "/precache-manifest.34daaf5c2654bd0cfc83783d37eed27e.js",
-    "service-worker.js": "/service-worker.js",
-    "static/css/main.def68fae.chunk.css.map": "/static/css/main.def68fae.chunk.css.map",
-    "static/js/2.ef52ad23.chunk.js.LICENSE.txt": "/static/js/2.ef52ad23.chunk.js.LICENSE.txt",
-    "static/media/person.mp3": "/static/media/person.d5b99dce.mp3",
-    "static/media/transport.mp3": "/static/media/transport.56531d97.mp3"
+    "main.css": "/ldm-camera/static/css/main.def68fae.chunk.css",
+    "main.js": "/ldm-camera/static/js/main.7f2944c7.chunk.js",
+    "main.js.map": "/ldm-camera/static/js/main.7f2944c7.chunk.js.map",
+    "runtime-main.js": "/ldm-camera/static/js/runtime-main.c6abca29.js",
+    "runtime-main.js.map": "/ldm-camera/static/js/runtime-main.c6abca29.js.map",
+    "static/js/2.ef52ad23.chunk.js": "/ldm-camera/static/js/2.ef52ad23.chunk.js",
+    "static/js/2.ef52ad23.chunk.js.map": "/ldm-camera/static/js/2.ef52ad23.chunk.js.map",
+    "index.html": "/ldm-camera/index.html",
+    "precache-manifest.fe0fb5f49c2c6d1e0f8908c4c2257e18.js": "/ldm-camera/precache-manifest.fe0fb5f49c2c6d1e0f8908c4c2257e18.js",
+    "service-worker.js": "/ldm-camera/service-worker.js",
+    "static/css/main.def68fae.chunk.css.map": "/ldm-camera/static/css/main.def68fae.chunk.css.map",
+    "static/js/2.ef52ad23.chunk.js.LICENSE.txt": "/ldm-camera/static/js/2.ef52ad23.chunk.js.LICENSE.txt",
+    "static/media/person.mp3": "/ldm-camera/static/media/person.d5b99dce.mp3",
+    "static/media/transport.mp3": "/ldm-camera/static/media/transport.56531d97.mp3"
   },
   "entrypoints": [
-    "static/js/runtime-main.743d20cc.js",
+    "static/js/runtime-main.c6abca29.js",
     "static/js/2.ef52ad23.chunk.js",
     "static/css/main.def68fae.chunk.css",
     "static/js/main.7f2944c7.chunk.js"
