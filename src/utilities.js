@@ -4,7 +4,24 @@ export const drawRect = (detections, ctx) =>{
 
     // Lấy thuộc tính hộp viền hiển thị của đối tượng
     const [x, y, width, height] = prediction['bbox']; 
-    const text = `[${index + 1}]`;//prediction['class']; 
+    let title ='';
+    switch (prediction["class"]) {
+      case "person":
+        title = "Con người";
+        break;
+      case "bicycle":
+        title = "Xe đạp";
+        break;
+      case "car":
+        title = "Ôtô";
+        break;
+      case "motorcycle":
+        title = "Xe máy";
+        break;
+      default:
+        break;
+    }
+    const text = `[${title}]`;//`[${index + 1}]`;//prediction['class']; 
 
     // Lấy màu ngẫu nhiên cho các ô viền vẽ đối tượng
     const color = Math.floor(Math.random()*16777215).toString(16);

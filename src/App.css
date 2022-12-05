@@ -36,7 +36,12 @@
     transform: rotate(360deg);
   }
 }
-
+.transport{
+  z-index: 10;
+    left: 0;
+    position: fixed;
+    top: 60px;
+}
 .person {
     z-index: 10;
     left: 0;
