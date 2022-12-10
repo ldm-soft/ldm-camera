@@ -13,7 +13,7 @@ import transportPath from "./audio/transport.mp3";
 import personPath from "./audio/person.mp3";
 import persontransportPath from "./audio/persontransport.mp3";
 import warningtransportPath from "./audio/warningtransport.mp3";
-import warningpersonPath from "./audio/warningtransport.mp3";
+import warningpersonPath from "./audio/warningperson.mp3";
 export interface itemDetect {
   objectItems: obj;
   timeExt: Date;
@@ -72,10 +72,15 @@ function App() {
       detect(net);
     }, 10);
   };
-  const playAudio =  async (audio: Audio) => {
-    await audio.play();
-    //Dừng lại đợi tương ứng thời gian waitimeReadWarning mới phát thông báo tiếp theo nếu có cảnh báo
-    await sleep(waitimeReadWarning);
+  let isEnabledAudio : Boolean = true;
+  const playAudio = async (audio: Audio) => {
+    if (isEnabledAudio) {
+      isEnabledAudio =   false ;
+      await audio.play();
+      //Dừng lại đợi tương ứng thời gian waitimeReadWarning mới phát thông báo tiếp theo nếu có cảnh báo
+      await sleep(waitimeReadWarning);
+      isEnabledAudio =   true ;
+    }
   };
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const detect = async (net) => {
@@ -136,10 +141,10 @@ function App() {
       //
     }
   };
-  const [countWarningPerson, setCountWarningPerson] = useState(0);
-  const [countWarningTransport, setCountWarningTransport] = useState(0);
-  const [timeWarningTransportOld, setTimeWarningTransportOld] = useState(null);
-  const [timeWarningPersontOld, setTimeWarningPersontOld] = useState(null);
+  let countWarningTransport : number = 0;
+  let timeWarningTransportOld :  date = null;
+  let countWarningPerson: number = 0;
+  let timeWarningPersontOld: date = null;
   //Tính toán để nhắc nhở TH:
   function checkWarning(countPerson: number, countTransport : number): Boolean {
     const currentDate = new Date();
@@ -148,30 +153,32 @@ function App() {
     //Ứng dụng sẽ phát ra thông báo: "Nếu các phương tiện không ra khỏi khu vực này, gây ảnh hưởng ATGT, dữ liệu vi phạm sẽ được chuyển đến cơ quan Công an xử lý"
     if (countTransport > maxTransport) {
       //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningTransport > 5) {
-    
+      if (countWarningTransport >= 5) {
         playAudio(audioWarningTransport);
-        setCountWarningTransport(0); // Sau khi nhắc nhở thì reset
+        countWarningTransport = 0; // Sau khi nhắc nhở thì reset
+        timeWarningTransportOld =null;
         return true;
       }
       if (
         timeWarningTransportOld == null ||
         currentDate - timeWarningTransportOld < 20 * 1000
       ) {
-        // Nhắc nhở  liên tiếp   trong 20s
-        setCountWarningTransport(countWarningTransport + 1);
+        // Nhắc nhở  liên tiếp trong 20s
+        countWarningTransport++;
       } else {
-        setCountWarningTransport(0);
+        countWarningTransport = 0;
+        timeWarningTransportOld =null;
       }
-      setTimeWarningTransportOld(currentDate);
+      timeWarningTransportOld = currentDate;
     }
     //Tính toán nhắc nhở đối tượng con người
-    //TH 05 lần học sinh không giải tán vẫn tụ tập thì phát cảnh báo: "Đề nghị các em học sinh cHấp hành tốt nội quy nhà trường, cố tình vi phạm dữ liệu hình ảnh sẽ được chuyển cho Nhà trường xử lý".
+    //TH 05 lần học sinh không giải tán vẫn tụ tập thì phát cảnh báo: "Đề nghị các em học sinh chấp hành tốt nội quy nhà trường, cố tình vi phạm dữ liệu hình ảnh sẽ được chuyển cho Nhà trường xử lý".
     if (countPerson > maxPerson) {
       //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningPerson > 5) {
+      if (countWarningPerson >= 5) {
         playAudio(audioWarningPerson);
-        setCountWarningPerson(0); // Sau khi nhắc nhở thì reset
+        countWarningPerson = 0; // Sau khi nhắc nhở thì reset
+        timeWarningPersontOld = null;
         return true;
       }
       if (
@@ -179,11 +186,12 @@ function App() {
         currentDate - timeWarningPersontOld < 20 * 1000
       ) {
         // Nhắc nhở  liên tiếp   trong 20s
-        setCountWarningPerson(countWarningPerson + 1);
+        countWarningPerson ++;
       } else {
-        setCountWarningPerson(0);
+        countWarningPerson = 0;
+        timeWarningPersontOld =null;
       }
-      setTimeWarningPersontOld(currentDate);
+      timeWarningPersontOld = currentDate;
     }
     return false;
   }
@@ -209,6 +217,11 @@ function App() {
   function checkActiveWarning(countPerson : number, countTransport : number):  void {
     //Set lại max theo khung giờ
     setMaxOnTime();
+    //
+    if(!isEnabledAudio)
+    {
+      return;
+    }
     //
     if (checkWarning(countPerson, countTransport)) {
       return;
