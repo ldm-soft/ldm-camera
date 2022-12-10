@@ -9,26 +9,61 @@ import Webcam from "react-webcam";
 import "./App.css";
 import { drawRect } from "./utilities";
 import { Helmet } from "react-helmet";
-import transportPath from './audio/transport.mp3'
-import personPath from './audio/person.mp3'
+import transportPath from "./audio/transport.mp3";
+import personPath from "./audio/person.mp3";
+import persontransportPath from "./audio/persontransport.mp3";
+import warningtransportPath from "./audio/warningtransport.mp3";
+import warningpersonPath from "./audio/warningtransport.mp3";
 export interface itemDetect {
   objectItems: obj;
   timeExt: Date;
 }
+interface timeRange {
+  fromTime: String;
+  toTime: String;
+  maxPersion: Number;
+  maxTransport: Number;
+}
+
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
   const [person, setPerson] = useState(0);
   const [transport, setTransport] = useState(0);
-  
-  const maxPerson = 20; //Số lượng đối tượng là con người (Nếu lớn  hơn sẽ thông báo: Khu vực cổng trường xin mọi người hãy di chuyển tránh tắc nghẽn giao thông.)
-  const maxTransport= 3;  //Số lượng đối tượng là phương tiện tối đa có trong khung hình(Nếu lớn hơn sẽ thông báo: Yêu cầu phương tiện giao thông di chuyển nhanh qua khu vực cổng trường để đảm bảo an toàn giao thông.)
-  let itemObj : itemDetect[] =[];
+  //
+  const waitimeReadWarning: Number = 10 * 1000; //10s (đơn vị tính mili giây với 1s = 1000ms)
+  //defaultMax Sử dụng cho trường hợp khác khung giờ cao điểm
+  const defaultMax = {
+    maxTransport: 0,
+    maxPersion: 0,
+  };
+  //timeRanges định nghĩa khung giờ cao điểm
+  const timeRanges: timeRange[] = [
+    {
+      fromTime: "06:40",
+      toTime: "07:10",
+      maxTransport: 20,
+      maxPersion: 20,
+    },
+    {
+      fromTime: "16:30",
+      toTime: "16:50",
+      maxTransport: 20,
+      maxPersion: 20,
+    },
+  ];
+  //Khởi tạo max =  default
+  const [maxPerson, setmaxPerson] = useState(defaultMax.maxPersion); //Số lượng đối tượng là con người (Nếu lớn  hơn sẽ thông báo: Khu vực cổng trường xin mọi người hãy di chuyển tránh tắc nghẽn giao thông.)
+  const [maxTransport, setMaxTransport] = useState(defaultMax.maxTransport); //Số lượng đối tượng là phương tiện tối đa có trong khung hình(Nếu lớn hơn sẽ thông báo: Yêu cầu phương tiện giao thông di chuyển nhanh qua khu vực cổng trường để đảm bảo an toàn giao thông.)
   //
   var audioTransport = new Audio(transportPath);
   var audioPersion = new Audio(personPath);
+  var audioPersonTransport = new Audio(persontransportPath);
+  var audioWarningTransport = new Audio(warningtransportPath);
+  var audioWarningPerson = new Audio(warningpersonPath);
   // Main function
   const runMain = async () => {
+    
     const net = await cocossd.load();
     console.log("Handpose model loaded.");
     //  Set thời gian re-load tìm kiếm người có trong khung hình đơn vị tính mili giây
@@ -37,10 +72,12 @@ function App() {
       detect(net);
     }, 10);
   };
-  const  playAudio = async(audio: Audio) =>
-  {
+  const playAudio =  async (audio: Audio) => {
     await audio.play();
-  }
+    //Dừng lại đợi tương ứng thời gian waitimeReadWarning mới phát thông báo tiếp theo nếu có cảnh báo
+    await sleep(waitimeReadWarning);
+  };
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
   const detect = async (net) => {
     // Kiểm tra data video trong khung hình tồn tại
     // undefined = chưa tồn tại/chưa được định nghĩa
@@ -64,9 +101,9 @@ function App() {
 
       // Phân tích và phát hiện đối tượng trong khung hình - Tối đa được thiết lập là 100
       //(*Tùy số lượng đối tượng cần phát hiện mà thay đổi thông số này)
-      const obj = await net.detect(video,1000);
+      const obj = await net.detect(video, 1000);
       var objectItems = [];
-      let countPerson=0;
+      let countPerson = 0;
       let countTransport = 0;
       //remove item old
       //
@@ -74,17 +111,14 @@ function App() {
         //Các đối tượng là con người(person) sẽ được chọn lọc và lấy ra ở bước này.
         //bicycle, motorcycle , car  = transport
         if (
-          (item.class ===
-            "person" ||
-            item.class === "bicycle" ||
-            item.class === "car" ||
-            item.class === "motorcycle")
+          item.class === "person" ||
+          item.class === "bicycle" ||
+          item.class === "car" ||
+          item.class === "motorcycle"
         ) {
           if (item.class === "person") {
-              countPerson++; //Tăng biến đếm  số người lên 1 đơn vị
-          }
-          else
-          {
+            countPerson++; //Tăng biến đếm  số người lên 1 đơn vị
+          } else {
             countTransport++; //Tăng biến đếm  số phương tiện lên 1 đơn vị
           }
           //find item
@@ -98,21 +132,102 @@ function App() {
       const ctx = canvasRef.current.getContext("2d");
       drawRect(objectItems, ctx);
       //
-      if(countPerson > maxPerson)
-      {
-        playAudio(audioPersion)
-      }
-      if(countTransport > maxTransport)
-      {
-        playAudio(audioTransport)
-      }
+      checkActiveWarning(countPerson,countTransport);
       //
     }
   };
+  const [countWarningPerson, setCountWarningPerson] = useState(0);
+  const [countWarningTransport, setCountWarningTransport] = useState(0);
+  const [timeWarningTransportOld, setTimeWarningTransportOld] = useState(null);
+  const [timeWarningPersontOld, setTimeWarningPersontOld] = useState(null);
+  //Tính toán để nhắc nhở TH:
+  function checkWarning(countPerson: number, countTransport : number): Boolean {
+    const currentDate = new Date();
+    //Tính toán nhắc nhở đối tượng phương tiện
+    //Trong trường hợp 05 lần phát cảnh báo mà phương tiện không di chuyển
+    //Ứng dụng sẽ phát ra thông báo: "Nếu các phương tiện không ra khỏi khu vực này, gây ảnh hưởng ATGT, dữ liệu vi phạm sẽ được chuyển đến cơ quan Công an xử lý"
+    if (countTransport > maxTransport) {
+      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
+      if (countWarningTransport > 5) {
+    
+        playAudio(audioWarningTransport);
+        setCountWarningTransport(0); // Sau khi nhắc nhở thì reset
+        return true;
+      }
+      if (
+        timeWarningTransportOld == null ||
+        currentDate - timeWarningTransportOld < 20 * 1000
+      ) {
+        // Nhắc nhở  liên tiếp   trong 20s
+        setCountWarningTransport(countWarningTransport + 1);
+      } else {
+        setCountWarningTransport(0);
+      }
+      setTimeWarningTransportOld(currentDate);
+    }
+    //Tính toán nhắc nhở đối tượng con người
+    //TH 05 lần học sinh không giải tán vẫn tụ tập thì phát cảnh báo: "Đề nghị các em học sinh cHấp hành tốt nội quy nhà trường, cố tình vi phạm dữ liệu hình ảnh sẽ được chuyển cho Nhà trường xử lý".
+    if (countPerson > maxPerson) {
+      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
+      if (countWarningPerson > 5) {
+        playAudio(audioWarningPerson);
+        setCountWarningPerson(0); // Sau khi nhắc nhở thì reset
+        return true;
+      }
+      if (
+        timeWarningPersontOld == null ||
+        currentDate - timeWarningPersontOld < 20 * 1000
+      ) {
+        // Nhắc nhở  liên tiếp   trong 20s
+        setCountWarningPerson(countWarningPerson + 1);
+      } else {
+        setCountWarningPerson(0);
+      }
+      setTimeWarningPersontOld(currentDate);
+    }
+    return false;
+  }
+  var minutesOfDay = function (m: Date) {
+    return m.getMinutes() + m.getHours() * 60;
+  };
+  function setMaxOnTime() {
+    const currentDate = new Date();
+    const indexTime = timeRanges.findIndex(
+      (item) =>
+        minutesOfDay(currentDate) >=
+          minutesOfDay(
+            new Date(`${currentDate.toDateString()} ${item.fromTime}`)
+          ) &&
+        minutesOfDay(currentDate) <=
+          minutesOfDay(new Date(`${currentDate.toDateString()} ${item.toTime}`))
+    );
 
+    const timeRange = indexTime !== -1 ? timeRanges[indexTime] : defaultMax;
+    setmaxPerson(timeRange.maxPersion);
+    setMaxTransport(timeRange.maxTransport);
+  }
+  function checkActiveWarning(countPerson : number, countTransport : number):  void {
+    //Set lại max theo khung giờ
+    setMaxOnTime();
+    //
+    if (checkWarning(countPerson, countTransport)) {
+      return;
+    }
+    if (countPerson > maxPerson && countTransport > maxTransport) {
+      playAudio(audioPersonTransport);
+      return;
+    }
+    if (countPerson > maxPerson) {
+      playAudio(audioPersion);
+      return;
+    }
+    if (countTransport > maxTransport) {
+      playAudio(audioTransport);
+      return;
+    }
+  }
   useEffect(() => {
     runMain();
-    
   }, []);
   useEffect(() => {
     checkAllowCamera();
@@ -123,7 +238,7 @@ function App() {
   //Kiển tra camera được chấp nhận sử dụng hay chưa.
   function checkAllowCamera() {
     navigator.mediaDevices
-      .getUserMedia({video: true })
+      .getUserMedia({ video: true })
       .then(function (stream) {
         loadDevices();
       });
@@ -181,7 +296,9 @@ function App() {
         <div className={`person ${person > maxPerson ? "alert-red" : ""}`}>
           Số người: {person}
         </div>
-        <div className={`transport ${transport > maxTransport ? "alert-red" : ""}`}>
+        <div
+          className={`transport ${transport > maxTransport ? "alert-red" : ""}`}
+        >
           Phương tiện: {transport}
         </div>
         {devices.length > 1 && (
