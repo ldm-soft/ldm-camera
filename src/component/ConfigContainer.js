@@ -71,6 +71,9 @@ function ConfigContainer() {
   }
   return (
     <div className={styles.groupContainer}>
+       <button style={{ left: "5px", top: "5px", position: "fixed" }}>
+          <a href="/">Trang chủ</a>
+        </button>
       <div className={styles.container}>
         <div className={styles.headerConfig}>Thiết lập hệ thống</div>
         <div>

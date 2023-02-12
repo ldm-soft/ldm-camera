@@ -16,16 +16,7 @@ import warningtransportPath from "./audio/warningtransport.mp3";
 import warningpersonPath from "./audio/warningperson.mp3";
 import ConfigContainer from './component/ConfigContainer';
 import timeRange from './util/inteface';
-// export interface itemDetect {
-//   objectItems: obj;
-//   timeExt: Date;
-// }
-// interface timeRange {
-//   fromTime: String;
-//   toTime: String;
-//   maxPersion: Number;
-//   maxTransport: Number;
-// }
+import logo from './icon/logo.png'
 
 function App() {
   const webcamRef = useRef(null);
@@ -305,7 +296,7 @@ function App() {
         <meta charSet="utf-8" />
         <title>LDM SOFT</title>
         <meta name="description" content="camera-ai" />
-        <link rel="icon" type="image/png" href="./icon/logo.png" />
+        <link rel="icon" type="image/png" href={logo} />
       </Helmet>
       <header className="App-header">
         <div className="camera-info">
@@ -357,8 +348,10 @@ function App() {
             height: "100%",
           }}
         />
+        <button style={{ right: "5px", bottom: "5px", position: "fixed" }}>
+          <a href="./config">Thiết lập</a>
+        </button>
       </header>
-      <ConfigContainer />
     </div>
   );
 }

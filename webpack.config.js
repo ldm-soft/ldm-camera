@@ -29,7 +29,21 @@ module.exports = {
           modules: true,
           localIdentName: "[name]__[local]___[hash:base64:5]"
         }
-      }
+      },
+      {
+        test: /\.(jpg|png|svg)$/,
+        loader: 'url-loader',
+        options: {
+          limit: 25000,
+        },
+    },
+    {
+        test: /\.(jpg|png|svg)$/,
+        loader: 'file-loader',
+        options: {
+          name: '[path][name].[hash].[ext]',
+        },
+    },
     ]
   }
 };
