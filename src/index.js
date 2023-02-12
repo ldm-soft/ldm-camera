@@ -10,11 +10,6 @@ import {
   useParams
 } from "react-router-dom";
 
-function BlogPost() {
-  let { slug } = useParams();
-  return <div>Now showing post {slug}</div>;
-}
-
 ReactDOM.render(
   <Router>
     <Switch>
