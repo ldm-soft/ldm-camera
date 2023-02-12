@@ -1,0 +1,13 @@
+.component{
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+.error{
+    background-color:  #FCCCC0 ;
+    color:  #902B00;
+}
+.success{
+    background-color: #E3FAD1;
+    color:  #0D8240;
+}

@@ -1,0 +1,23 @@
+.component{
+    border: solid 1px burlywood;
+    border-radius: 4px;
+    padding: 2px 4px;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+}
+
+.icon{
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 14px;
+    position: absolute;
+    right: 6px;   /* must be equal to parent's right padding */
+}
+
+.icon:focus-visible{
+    outline: none;
+}
+.iconPlus{
+    font-size: 32px;
+}

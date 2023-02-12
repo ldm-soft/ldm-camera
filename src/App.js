@@ -7,23 +7,25 @@ import * as tf from "@tensorflow/tfjs";
 import * as cocossd from "@tensorflow-models/coco-ssd";
 import Webcam from "react-webcam";
 import "./App.css";
-import { drawRect } from "./utilities";
+import { drawRect } from "./util/utilities";
 import { Helmet } from "react-helmet";
 import transportPath from "./audio/transport.mp3";
 import personPath from "./audio/person.mp3";
 import persontransportPath from "./audio/persontransport.mp3";
 import warningtransportPath from "./audio/warningtransport.mp3";
 import warningpersonPath from "./audio/warningperson.mp3";
-export interface itemDetect {
-  objectItems: obj;
-  timeExt: Date;
-}
-interface timeRange {
-  fromTime: String;
-  toTime: String;
-  maxPersion: Number;
-  maxTransport: Number;
-}
+import ConfigContainer from './component/ConfigContainer';
+import timeRange from './util/inteface';
+// export interface itemDetect {
+//   objectItems: obj;
+//   timeExt: Date;
+// }
+// interface timeRange {
+//   fromTime: String;
+//   toTime: String;
+//   maxPersion: Number;
+//   maxTransport: Number;
+// }
 
 function App() {
   const webcamRef = useRef(null);
@@ -34,11 +36,11 @@ function App() {
   const waitimeReadWarning: Number = 10 * 1000; //10s (đơn vị tính mili giây với 1s = 1000ms)
   //defaultMax Sử dụng cho trường hợp khác khung giờ cao điểm
   const defaultMax = {
-    maxTransport: 0,
-    maxPersion: 0,
+    maxTransport: 10,
+    maxPersion: 10,
   };
-  //timeRanges định nghĩa khung giờ cao điểm
-  const timeRanges: timeRange[] = [
+
+  const defaultTime : timeRange[]=[
     {
       fromTime: "06:40",
       toTime: "07:10",
@@ -52,6 +54,9 @@ function App() {
       maxPersion: 20,
     },
   ];
+  //timeRanges định nghĩa khung giờ cao điểm
+  let timeRanges: timeRange[] = defaultTime;
+  
   //Khởi tạo max =  default
   const [maxPerson, setmaxPerson] = useState(defaultMax.maxPersion); //Số lượng đối tượng là con người (Nếu lớn  hơn sẽ thông báo: Khu vực cổng trường xin mọi người hãy di chuyển tránh tắc nghẽn giao thông.)
   const [maxTransport, setMaxTransport] = useState(defaultMax.maxTransport); //Số lượng đối tượng là phương tiện tối đa có trong khung hình(Nếu lớn hơn sẽ thông báo: Yêu cầu phương tiện giao thông di chuyển nhanh qua khu vực cổng trường để đảm bảo an toàn giao thông.)
@@ -353,6 +358,7 @@ function App() {
           }}
         />
       </header>
+      <ConfigContainer />
     </div>
   );
 }

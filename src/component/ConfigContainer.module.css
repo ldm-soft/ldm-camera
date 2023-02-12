@@ -1,0 +1,176 @@
+:root {
+    --width-container: 560px;
+  }
+.container {
+    margin: 10px;
+    width: var(--width-container);
+}
+
+.error {
+    color: red;
+}
+
+.saveTime {
+    width: 80px;
+    height: 25px;
+    margin-top: 5px;
+}
+
+.saveTime:hover {
+    background-color: bisque;
+    border-color: antiquewhite;
+}
+
+.deleteTime{
+    width: 80px;
+    height: 25px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.deleteTime:hover {
+    background-color: red;
+    border-color: antiquewhite;
+}
+
+.addTime{
+    width: 80px;
+    height: 25px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+.addTime:hover {
+    background-color: cyan;
+    border-color: antiquewhite;
+}
+
+.inputTime {
+    width: 90px;
+}
+
+.inputTitle {
+    width: 160px;
+    display: inline-table;
+}
+
+.inputNumber {
+    text-align: end;
+    width: 34px;
+    font-weight: bold;
+}
+
+.header1 {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.groupTime {
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    width: 310px;
+}
+
+.groupListTime {
+    width: 330px;
+    margin-top: 10px;
+}
+
+.groupListTimeShow {
+    border: solid 1px burlywood;
+    border-radius: 4px;
+}
+
+.headerListTimeShow {
+    border: unset !important;
+    border-bottom: solid 1px darkgray !important;
+    border-radius: 0px !important;
+}
+
+.headerConfig {
+    text-transform: uppercase;
+    font-size: 22px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.headerConfigLevel1 {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.headerConfigLevel2 {
+    text-transform: uppercase;
+    font-style: italic;
+    margin-left: 10px;
+}
+
+.titleFieldTT {
+    display: inline-table;
+    width: 270px;
+}
+
+.inputTimeWait {
+    width: 50px;
+    margin: 0px 5px;
+}
+
+.titleFieldXL {
+    display: inline-table;
+    width: 300px;
+}
+
+.titleFieldHA {
+    display: inline-table;
+    width: 150px;
+}
+
+.explainTimeWait {
+    display: inline-table;
+    width: 300px;
+}
+
+.groupL {
+    align-items: center;
+    display: inline-flex;
+}
+
+.inputImgSave {
+    width: 80px;
+    margin-right: 5px;
+}
+
+.inputCount {
+    width: 50px;
+    margin: 0 5px;
+}
+
+.groupAudio {
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    width: var(--width-container);
+}
+
+.groupImage {
+    margin-top: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding: 10px;
+    width: var(--width-container);
+}
+
+.groupSave {
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.saveBtn{
+    padding: 10px;
+}
+.groupContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
