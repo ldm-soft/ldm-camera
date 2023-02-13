@@ -101,7 +101,7 @@ function ConfigContainer() {
           }`}
         >
           <CardHeaderComponent
-            headerText={`Danh sách khung giờ thiết lập (${timeRanges.length})`}
+            headerText={`Danh sách khung giờ thiết lập (${timeRanges?timeRanges.length:0})`}
             isShow={config.showListTime}
             classStyle={
               config.showListTime.value ? styles.headerListTimeShow : ""
