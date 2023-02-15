@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getConfigTime, resetSession, saveConfigTime } from "../util/session";
-import { ITimeRange, IStage } from "../util/inteface";
+import inteface, { ITimeRange, IStage } from "../util/inteface";
 import {
   buildConfigTimeId,
   ValidatorTimeRange,
@@ -26,15 +26,27 @@ interface ConfigTimeProps {
   data: ITimeRange;
   isShow: Boolean;
 }
+interface IConfigDefault{
+  fromTime: String;
+  toTime: String;
+  maxPersion: Number;
+  maxTransport: Number;
+}
 function ConfigTime(props: ConfigTimeProps) {
   let { reLoadFnc, data, isShow } = props;
+  let configDefault :IConfigDefault ={
+    fromTime:'00:00',
+    toTime:'23:59',
+    maxPersion: 10,
+    maxTransport: 10,
+  }
   const iniArr: IValidator[] = [];
   const [error, setError] = useState(iniArr);
-  let [fromTime, setFromTime] = useState("");
-  const [toTime, setToTime] = useState("");
+  let [fromTime, setFromTime] = useState(configDefault.fromTime);
+  const [toTime, setToTime] = useState(configDefault.toTime);
   const [id, setId] = useState(null);
-  const [maxPersion, setMaxPersion] = useState(0);
-  const [maxTransport, setMaxTransport] = useState(0);
+  const [maxPersion, setMaxPersion] = useState(configDefault.maxPersion);
+  const [maxTransport, setMaxTransport] = useState(configDefault.maxTransport);
   const [isUpdate, setIsUpdate] = useState(false);
   let config: IConfig = {
     id:{
@@ -61,10 +73,10 @@ function ConfigTime(props: ConfigTimeProps) {
   function clearData()
   {
     setError([]);
-    config.fromTime.setValue("");
-    config.toTime.setValue("");
-    config.maxPersion.setValue(0);
-    config.maxTransport.setValue(0);
+    config.fromTime.setValue(configDefault.fromTime);
+    config.toTime.setValue(configDefault.toTime);
+    config.maxPersion.setValue(configDefault.maxPersion);
+    config.maxTransport.setValue(configDefault.maxTransport);
     config.id.setValue(null);
   }
   function newClick()
@@ -107,6 +119,7 @@ function ConfigTime(props: ConfigTimeProps) {
         },
       ]);
       data = null;
+      setIsUpdate(false);
       clearData();
       reLoadFnc();
     }
@@ -184,7 +197,7 @@ function ConfigTime(props: ConfigTimeProps) {
           );
         })}
       <button className={styles.saveTime} onClick={saveClick}>
-        {isUpdate ?"Cập nhật":"Lưu"}
+        {isUpdate ?"Cập nhật":"Thêm++"}
       </button>
       {isUpdate && (
         <>

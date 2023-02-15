@@ -15,8 +15,9 @@ import persontransportPath from "./audio/persontransport.mp3";
 import warningtransportPath from "./audio/warningtransport.mp3";
 import warningpersonPath from "./audio/warningperson.mp3";
 import ConfigContainer from './component/ConfigContainer';
-import timeRange from './util/inteface';
+import ITimeRange from './util/inteface';
 import logo from './icon/logo.png'
+import { getConfigTime } from "./util/session";
 
 function App() {
   const webcamRef = useRef(null);
@@ -31,7 +32,7 @@ function App() {
     maxPersion: 10,
   };
 
-  const defaultTime : timeRange[]=[
+  const defaultTime : ITimeRange[]=[
     {
       fromTime: "06:40",
       toTime: "07:10",
@@ -46,8 +47,11 @@ function App() {
     },
   ];
   //timeRanges định nghĩa khung giờ cao điểm
-  let timeRanges: timeRange[] = defaultTime;
-  
+  let timeRanges: ITimeRange[] = defaultTime;
+  timeRanges = getConfigTime();
+  if(!timeRanges){
+    timeRanges = defaultTime;
+  }
   //Khởi tạo max =  default
   const [maxPerson, setmaxPerson] = useState(defaultMax.maxPersion); //Số lượng đối tượng là con người (Nếu lớn  hơn sẽ thông báo: Khu vực cổng trường xin mọi người hãy di chuyển tránh tắc nghẽn giao thông.)
   const [maxTransport, setMaxTransport] = useState(defaultMax.maxTransport); //Số lượng đối tượng là phương tiện tối đa có trong khung hình(Nếu lớn hơn sẽ thông báo: Yêu cầu phương tiện giao thông di chuyển nhanh qua khu vực cổng trường để đảm bảo an toàn giao thông.)
@@ -141,6 +145,10 @@ function App() {
   let timeWarningTransportOld :  date = null;
   let countWarningPerson: number = 0;
   let timeWarningPersontOld: date = null;
+  let current ={
+    maxPerson: 0,
+    maxTransport: 0,
+  }
   //Tính toán để nhắc nhở TH:
   function checkWarning(countPerson: number, countTransport : number): Boolean {
     const currentDate = new Date();
@@ -209,6 +217,8 @@ function App() {
     const timeRange = indexTime !== -1 ? timeRanges[indexTime] : defaultMax;
     setmaxPerson(timeRange.maxPersion);
     setMaxTransport(timeRange.maxTransport);
+    current.maxPerson = timeRange.maxPersion;
+    current.maxTransport = timeRange.maxTransport;
   }
   function checkActiveWarning(countPerson : number, countTransport : number):  void {
     //Set lại max theo khung giờ
@@ -222,15 +232,15 @@ function App() {
     if (checkWarning(countPerson, countTransport)) {
       return;
     }
-    if (countPerson > maxPerson && countTransport > maxTransport) {
+    if (countPerson > current.maxPerson && countTransport > current.maxTransport) {
       playAudio(audioPersonTransport);
       return;
     }
-    if (countPerson > maxPerson) {
+    if (countPerson > current.maxPerson) {
       playAudio(audioPersion);
       return;
     }
-    if (countTransport > maxTransport) {
+    if (countTransport > current.maxTransport) {
       playAudio(audioTransport);
       return;
     }

@@ -11,7 +11,7 @@ function TimeItem(props: TimeItemProp) {
   return (
     <tr className={styles.tr}>
       <td className={styles.td}>{index}</td>
-      <td className={`${styles.td} ${styles.clickItem}`} onClick={() => {editCTA(data);}}>
+      <td className={`${styles.td} ${styles.clickItem}`} onClick={() => {editCTA(data);}} title="[Nhấp vào để sửa/xóa]">
         {data.fromTime}~{data.toTime}
       </td >
       <td className={styles.td}>{data.maxPersion}</td>

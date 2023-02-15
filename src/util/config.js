@@ -85,7 +85,7 @@ export function ValidatorTimeRange(item: ITimeRange, type: ValidatorType): IVali
         errorText: format(errorFromTo, item.fromTime, item.toTime),
       });
     }
-    if (checkExistsTime(item)) {
+    if (checkExistsTime(item, true)) {
       error.push({
         error: true,
         errorText: format(existsItem, item.fromTime, item.toTime),
@@ -106,16 +106,53 @@ export function ValidatorTimeRange(item: ITimeRange, type: ValidatorType): IVali
   }
   return error;
 }
-export function checkExistsTime(itemCheck: ITimeRange): Boolean {
+export function checkExistsTime(itemCheck: ITimeRange, isOverLap: Boolean): Boolean {
   let timeRanges: ITimeRange[] = getConfigTime();
   const indexItem =
     timeRanges != null
       ? timeRanges.findIndex(
           (item) =>
             item.id !== itemCheck.id &&
-            item.fromTime === itemCheck.fromTime &&
-            item.toTime === itemCheck.toTime
+            (
+              (
+                item.fromTime === itemCheck.fromTime &&
+                item.toTime === itemCheck.toTime
+              )
+              ||
+              (
+                isOverLap && IsOverLapTime(itemCheck, item)
+              )
+            )
         )
       : -1;
   return indexItem != -1;
+}
+export function IsOverLapTime(time1: ITimeRange, time2: ITimeRange) : Boolean
+{
+  return (time1.id !== time2.id &&  (
+      (
+        convertTimeStringToMinutes(time1.fromTime) >= convertTimeStringToMinutes(time2.fromTime)
+        &&
+        convertTimeStringToMinutes(time1.fromTime) <= convertTimeStringToMinutes(time2.toTime)
+      )
+      ||
+      (
+        convertTimeStringToMinutes(time1.toTime) >= convertTimeStringToMinutes(time2.fromTime)
+        &&
+        convertTimeStringToMinutes(time1.toTime) <= convertTimeStringToMinutes(time2.toTime)
+      )
+      ||
+      (
+        convertTimeStringToMinutes(time2.fromTime) >= convertTimeStringToMinutes(time1.fromTime)
+        &&
+        convertTimeStringToMinutes(time2.fromTime) <= convertTimeStringToMinutes(time1.toTime)
+      )
+      ||
+      (
+        convertTimeStringToMinutes(time2.toTime) >= convertTimeStringToMinutes(time1.fromTime)
+        &&
+        convertTimeStringToMinutes(time2.toTime) <= convertTimeStringToMinutes(time1.toTime)
+      )
+    )
+  );
 }
