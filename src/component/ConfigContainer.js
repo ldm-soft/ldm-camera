@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { getConfigTime, resetSession, saveConfigTime } from "../util/session";
-import { ITimeRange, IStage, ValidatorTimeRange } from "../util/inteface";
+import {
+  ITimeRange,
+  IStage,
+  ValidatorTimeRange,
+  IStageValueField,
+  IConfig,
+  IConfigAudio,
+} from "../util/inteface";
 import { IValidator } from "../util/validator";
 import { buildId, saveItemConfigTime } from "../util/config";
 import styles from "./ConfigContainer.module.css";
@@ -10,14 +17,10 @@ import CheckboxComponent from "../control/CheckboxComponent";
 import CardHeaderComponent from "../card/CardHeaderComponent";
 import ConfigAudio from "./ConfigAudio";
 import ConfigImage from "./ConfigImage";
+import { MapToConfigModel } from "../util/mapper";
+import { ReadTextOfFile, SaveTextToFile } from "../util/api/fileApi";
+import {IConfigModel} from "../util/inteface";
 
-interface IConfig {
-  fromTime: IStage<String>;
-  toTime: IStage<String>;
-  isCustom: IStage<Boolean>;
-  isDefault: IStage<Boolean>;
-  showListTime: IStage<Boolean>;
-}
 function ConfigContainer() {
   //    resetSession();
   const [timeCustom, setTimeCustom] = useState(true);
@@ -25,6 +28,78 @@ function ConfigContainer() {
   const [timeDefault, setTimeDefault] = useState(false);
   const [fromTime, setFromTime] = useState("");
   const [toTime, setToTime] = useState("");
+  //File
+  const [audioFilePersionA, setAudioFilePersionA] = useState();
+  const [audioValuePersionA, setAudioValuePersionA] = useState("");
+  const [audioFileTransportA, setAudioFileTransportA] = useState();
+  const [audioValueTransportA, setAudioValueTransportA] = useState("");
+  const [audioFilePersonTransportA, setAudioFilePersonTransportA] = useState();
+  const [audioValuePersonTransportA, setAudioValuePersonTransportA] =
+    useState("");
+  const [audioFilePersionB, setAudioFilePersionB] = useState();
+  const [audioValuePersionB, setAudioValuePersionB] = useState("");
+  const [audioFileTransportB, setAudioFileTransportB] = useState();
+  const [audioValueTransportB, setAudioValueTransportB] = useState("");
+  const [audioFilePersonTransportB, setAudioFilePersonTransportB] = useState();
+  const [audioValuePersonTransportB, setAudioValuePersonTransportB] =
+    useState("");
+  //
+  const [timeDelay, setTimeDelay] = useState(10);
+  const [countMax, setCountMax] = useState(5);
+  //
+  var configAudio: IConfigAudio = {
+    audioPersonA: {
+      fieldItem: { value: audioFilePersionA, setValue: setAudioFilePersionA },
+      valueItem: { value: audioValuePersionA, setValue: setAudioValuePersionA },
+    },
+    audioTransportA: {
+      fieldItem: {
+        value: audioFileTransportA,
+        setValue: setAudioFileTransportA,
+      },
+      valueItem: {
+        value: audioValueTransportA,
+        setValue: setAudioValueTransportA,
+      },
+    },
+    audioPersonTransportA: {
+      fieldItem: {
+        value: audioFilePersonTransportA,
+        setValue: setAudioFilePersonTransportA,
+      },
+      valueItem: {
+        value: audioValuePersonTransportA,
+        setValue: setAudioValuePersonTransportA,
+      },
+    },
+    audioPersonB: {
+      fieldItem: { value: audioFilePersionB, setValue: setAudioFilePersionB },
+      valueItem: { value: audioValuePersionB, setValue: setAudioValuePersionB },
+    },
+    audioTransportB: {
+      fieldItem: {
+        value: audioFileTransportB,
+        setValue: setAudioFileTransportB,
+      },
+      valueItem: {
+        value: audioValueTransportB,
+        setValue: setAudioValueTransportB,
+      },
+    },
+    audioPersonTransportB: {
+      fieldItem: {
+        value: audioFilePersonTransportB,
+        setValue: setAudioFilePersonTransportB,
+      },
+      valueItem: {
+        value: audioValuePersonTransportB,
+        setValue: setAudioValuePersonTransportB,
+      },
+    },
+    countMax: { value: countMax, setValue: setCountMax },
+    timeDelay: { value: timeDelay, setValue: setTimeDelay },
+  };
+  //
   var config: IConfig = {
     fromTime: {
       value: fromTime,
@@ -50,11 +125,39 @@ function ConfigContainer() {
 
   const [timeRanges, setTimeRanges] = useState(getConfigTime());
   var [itemData, setItem] = useState(null);
+  var [imgFile, setImgFile] = useState(null);
+  var [imgTitle, setImgTitle] = useState(null);
 
   const folderInput = React.useRef(null);
   function reloadConfig() {
     setTimeRanges(getConfigTime());
   }
+  //
+  const [configModel, setConfigModel] = useState(null);
+  useEffect(() => {
+    readText();
+  }, []);
+  //
+  async function readText() {
+    console.log("read");
+    var result = await ReadTextOfFile("config.txt");
+    var model : IConfigModel = JSON.parse(result);
+    SetDataFromConfigModel(model);
+  }
+  //
+  function SetDataFromConfigModel(configModel: IConfigModel)
+  {
+    setTimeRanges(configModel.listTime);
+    setTimeDelay(configModel.timeDelay);
+    setCountMax(configModel.countMax);
+    setAudioValuePersionA(configModel.audio.persionA);
+    setAudioValuePersionB(configModel.audio.persionB);
+    setAudioValueTransportA(configModel.audio.transportA);
+    setAudioValueTransportB(configModel.audio.transportB);
+    setAudioValuePersonTransportA(configModel.audio.persionTransportA);
+    setAudioValuePersonTransportB(configModel.audio.persionTransportB);
+  }
+  //
   function onChangeCheckTime(e) {
     switch (e.target.id) {
       case "chkDefault":
@@ -65,15 +168,22 @@ function ConfigContainer() {
         break;
     }
   }
-  function onClickEditTime(item)
-  {
+  function onClickEditTime(item) {
     setItem(item);
+  }
+  async function onClickSave() {
+    var result = await SaveTextToFile(
+      "config.txt",
+      JSON.stringify(MapToConfigModel(configAudio, timeRanges))
+    );
+    window.alert("Lưu thành công!!!");
+    console.log(result);
   }
   return (
     <div className={styles.groupContainer}>
-       <button style={{ left: "5px", top: "5px", position: "fixed" }}>
-          <a href="/">Trang chủ</a>
-        </button>
+      <button style={{ left: "5px", top: "5px", position: "fixed" }}>
+        <a href="/">Trang chủ</a>
+      </button>
       <div className={styles.container}>
         <div className={styles.headerConfig}>Thiết lập hệ thống</div>
         <div>
@@ -94,29 +204,43 @@ function ConfigContainer() {
             onChangeFnc={onChangeCheckTime}
           />
         </div>
-        {( config.isCustom.value ) && <ConfigTime reLoadFnc={reloadConfig} data={itemData} />}
+        {config.isCustom.value && (
+          <ConfigTime reLoadFnc={reloadConfig} data={itemData} />
+        )}
         <div
           className={`${styles.groupListTime} ${
             config.showListTime.value ? styles.groupListTimeShow : ""
           }`}
         >
           <CardHeaderComponent
-            headerText={`Danh sách khung giờ thiết lập (${timeRanges?timeRanges.length:0})`}
+            headerText={`Danh sách khung giờ thiết lập (${
+              timeRanges ? timeRanges.length : 0
+            })`}
             isShow={config.showListTime}
             classStyle={
               config.showListTime.value ? styles.headerListTimeShow : ""
             }
           />
-          {config.showListTime.value && <ListTime lstData={timeRanges} editCTA={onClickEditTime} />}
+          {config.showListTime.value && (
+            <ListTime lstData={timeRanges} editCTA={onClickEditTime} />
+          )}
         </div>
-        {config.isCustom.value && <ConfigAudio />}
-        {config.isCustom.value && <ConfigImage />}
+        {config.isCustom.value && <ConfigAudio configData={configAudio} />}
+        {config.isCustom.value && (
+          <ConfigImage
+            inputImgPath={{
+              fieldItem: { value: imgTitle, setValue: setImgTitle },
+              valueItem: { value: imgFile, setValue: setImgFile },
+            }}
+          />
+        )}
         {config.isCustom.value && (
           <div className={styles.groupSave}>
-            <button className={styles.saveBtn}>Lưu thiết lập</button>
+            <button className={styles.saveBtn} onClick={onClickSave}>
+              Lưu thiết lập
+            </button>
           </div>
         )}
-        
       </div>
     </div>
   );

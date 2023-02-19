@@ -1,21 +1,24 @@
 import React, { useEffect, useState } from "react";
 import InputFileComponent from "../control/InputFileComponent";
 import styles from "./ConfigContainer.module.css";
+import {IStageValueField} from "../util/inteface";
 interface ConfigImageProps {
-  // reLoadFnc: (void) => 0;
+  inputImgPathFile : IStageValueField<any, String>
 }
 function ConfigImage(props: ConfigImageProps) {
-  const [value, setValueFile] = useState();
-  const [file, setFile] = useState();
+  // const [value, setValueFile] = useState();
+  // const [file, setFile] = useState();
+  const {inputImgPath}  = props;
   return (
     <div className={styles.groupImage}>
       <div className={styles.headerConfigLevel1}>3. Thiết lập hình ảnh</div>
       <div>
         <label className={styles.titleFieldHA}>Đường dẫn lưu ảnh</label>
         <InputFileComponent 
-            acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputPath={true}
+            title={'Chọn'}
+            inputValue ={inputImgPath.valueItem}
+            inputFiles ={inputImgPath.fieldItem}
           />
       </div>
       <div>

@@ -8,9 +8,11 @@ interface InputFileProps {
   checkExist: Boolean;
   classStyle?: any;
   onChangeFnc?: (void) => 0;
+  title?: String;
   titleOnHover?: String;
   acceptFileType?: String;
   uploadOnChange?: Boolean;
+  inputPath?: Boolean;
 }
 function InputFileComponent(props: InputFileProps) {
   const {
@@ -21,8 +23,10 @@ function InputFileComponent(props: InputFileProps) {
     checkExist = false,
     onChangeFnc,
     titleOnHover,
+    title = "Chọn file",
     acceptFileType = "*.*",
     uploadOnChange = false,
+    inputPath= false,
   } = props;
   var inputType: string = "file";
   const inputFile = useRef(null);
@@ -42,17 +46,27 @@ function InputFileComponent(props: InputFileProps) {
       }
     }
   };
+  function ClickButton() {
+    // if(inputPath)
+    // {
+    //   getDir();
+    // }
+    // else
+    {
+      inputFile.current.click();
+    }
+  }
+  async function getDir() {
+    const dirHandle = await window.showDirectoryPicker();
+    console.log(dirHandle);
+    console.log(dirHandle.path)
+    // run code for dirHandle
+  }
 
   return (
     <>
-      <button
-        onClick={() => {
-          inputFile.current.click();
-        }}
-      >
-        Chọn File
-      </button>
-      <label style={{marginLeft:'5px'}}>{inputValue.value}</label>
+      <button onClick={ClickButton}>{title}</button>
+      <label style={{ marginLeft: "5px" }}>{inputValue.value}</label>
       <input
         id={inputId}
         type={inputType}

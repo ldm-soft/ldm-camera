@@ -44,4 +44,56 @@ export async function UploadFile(fileUp: any): Boolean {
     });
   return isOk;
 }
+
+export async function SaveTextToFile(fileName: String, bodyData: String): Boolean {
+  var isOk: Boolean = false;
+  await axios
+    .post(
+      `${urlApi}/saveTextToFile`,
+      {
+        filename: fileName,
+        data: bodyData,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((res) => {
+      isOk = true;
+    })
+    .catch(function (error) {
+      
+    });
+  return isOk;
+}
+
+export async function ReadTextOfFile(fileName: String): String {
+  var result : String ='';
+  await axios
+    .post(
+      `${urlApi}/readTextOfFile`,
+      {
+        filename: fileName,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((res) => {
+      console.log(res.data)
+      result = res.data.text;
+    })
+    .catch(function (error) {
+      switch (error.response.status) {
+        case 404:
+          window.alert(error.response.data.message);
+          break;
+      }
+    });
+  return result;
+}
 export default null;

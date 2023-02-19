@@ -3,10 +3,14 @@ import styles from "./ConfigContainer.module.css";
 import axios from "axios";
 import { CheckFile, UploadFile } from "../util/api/fileApi";
 import InputFileComponent from "../control/InputFileComponent";
-interface ConfigAudioProps {
-  // reLoadFnc: (void) => 0;
+import {IConfigAudio} from "../util/inteface";
+import InputComponent from "../control/InputComponent";
+
+interface IConfigAudioProps{
+  configData: IConfigAudio
 }
-function ConfigAudio(props: ConfigAudioProps) {
+function ConfigAudio(props: IConfigAudioProps) {
+  const { audioPersonA, audioTransportA, audioPersonTransportA, audioPersonB, audioTransportB, audioPersonTransportB, timeDelay, countMax } = props.configData;
   const [value, setValueFile] = useState();
   const [file, setFile] = useState();
   return (
@@ -22,8 +26,8 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioPersonA.valueItem}
+            inputFiles ={audioPersonA.fieldItem}
           />
         </div>
         <div>
@@ -32,8 +36,8 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioTransportA.valueItem}
+            inputFiles ={audioTransportA.fieldItem}
           />
         </div>
         <div>
@@ -42,13 +46,18 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioPersonTransportA.valueItem}
+            inputFiles ={audioPersonTransportA.fieldItem}
           />
         </div>
         <div className={styles.groupL}>
-          <label>Thời gian sau:</label>
-          <input type="number" className={styles.inputTimeWait} />
+          <label>Thời gian sau(s):</label>
+          <InputComponent
+            inputType="number"
+            inputValue={timeDelay}
+            classStyle={styles.inputTimeWait}
+            titleOnHover="Thời gian delay giữa 2 lần cảnh báo liên tiếp."
+          />
           <label className={styles.explainTimeWait}>
             (Sẽ phát cảnh báo nếu người/phương tiện liên tục vượt ngưỡng cảnh
             báo)
@@ -63,8 +72,8 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioPersonB.valueItem}
+            inputFiles ={audioPersonB.fieldItem}
           />
         </div>
         <div>
@@ -73,8 +82,8 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioTransportB.valueItem}
+            inputFiles ={audioTransportB.fieldItem}
           />
         </div>
         <div>
@@ -83,13 +92,18 @@ function ConfigAudio(props: ConfigAudioProps) {
           </label>
           <InputFileComponent 
             acceptFileType="application/mp3, .mp3"
-            inputValue ={{value : value, setValue : setValueFile}}
-            inputFiles ={{value : file, setValue : setFile}}
+            inputValue ={audioPersonTransportB.valueItem}
+            inputFiles ={audioPersonTransportB.fieldItem}
           />
         </div>
         <div>
           <label>Cảnh báo xử lý sau khi vượt quá:</label>
-          <input type="number" className={styles.inputCount} />
+          <InputComponent
+            inputType="number"
+            inputValue={countMax}
+            classStyle={styles.inputCount}
+            titleOnHover="Thời gian delay giữa 2 lần cảnh báo liên tiếp."
+          />
           <label>lần cảnh báo tuyên truyền</label>
         </div>
       </div>
