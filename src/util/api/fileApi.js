@@ -69,7 +69,7 @@ export async function SaveTextToFile(fileName: String, bodyData: String): Boolea
   return isOk;
 }
 
-export async function ReadTextOfFile(fileName: String): String {
+export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  false): String {
   var result : String ='';
   await axios
     .post(
@@ -88,11 +88,16 @@ export async function ReadTextOfFile(fileName: String): String {
       result = res.data.text;
     })
     .catch(function (error) {
-      switch (error.response.status) {
-        case 404:
-          window.alert(error.response.data.message);
-          break;
+      console.log(error)
+      if(error.response && error.response.status)
+      {
+        switch (error.response.status) {
+          case 404:
+            if(showAlert){window.alert(error.response.data.message);}
+            break;
+        }
       }
+      
     });
   return result;
 }

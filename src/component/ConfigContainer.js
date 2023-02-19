@@ -141,8 +141,11 @@ function ConfigContainer() {
   async function readText() {
     console.log("read");
     var result = await ReadTextOfFile("config.txt");
-    var model : IConfigModel = JSON.parse(result);
-    SetDataFromConfigModel(model);
+    if(result)
+    {
+      var model : IConfigModel = JSON.parse(result);
+      SetDataFromConfigModel(model);
+    }
   }
   //
   function SetDataFromConfigModel(configModel: IConfigModel)

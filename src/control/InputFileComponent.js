@@ -25,7 +25,7 @@ function InputFileComponent(props: InputFileProps) {
     titleOnHover,
     title = "Chọn file",
     acceptFileType = "*.*",
-    uploadOnChange = false,
+    uploadOnChange = true,
     inputPath= false,
   } = props;
   var inputType: string = "file";
@@ -52,9 +52,9 @@ function InputFileComponent(props: InputFileProps) {
     //   getDir();
     // }
     // else
-    {
+    // {
       inputFile.current.click();
-    }
+    // }
   }
   async function getDir() {
     const dirHandle = await window.showDirectoryPicker();

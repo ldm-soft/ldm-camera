@@ -78,6 +78,13 @@ app.post("/api/saveTextToFile", (req, res) => {
 //Read file
 app.post("/api/readTextOfFile", (req, res) => {
   var pathFile = path.join(pathUpload, req.body.filename);
+  if (!fs.existsSync(pathFile)) {
+    return res
+      .status(404)
+      .send({
+        message: `${req.body.filename} không tồn tại!`,
+      });
+  }
   fs.readFile(pathFile, function(err, contents) {
     if(!err){
       return res
