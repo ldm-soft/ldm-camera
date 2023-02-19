@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import styles from "./ConfigContainer.module.css";
+import axios from "axios";
+import { CheckFile, UploadFile } from "../util/api/fileApi";
+import InputFileComponent from "../control/InputFileComponent";
 interface ConfigAudioProps {
   // reLoadFnc: (void) => 0;
 }
 function ConfigAudio(props: ConfigAudioProps) {
+  const [value, setValueFile] = useState();
+  const [file, setFile] = useState();
   return (
     <div className={styles.groupAudio}>
       <div className={styles.headerConfigLevel1}>2.Cách thức phát cảnh báo</div>
@@ -15,19 +20,31 @@ function ConfigAudio(props: ConfigAudioProps) {
           <label className={styles.titleFieldTT}>
             File âm thanh cảnh báo người
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div>
           <label className={styles.titleFieldTT}>
             File âm thanh cảnh báo phương tiện
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div>
           <label className={styles.titleFieldTT}>
             File âm thanh cảnh báo người & PT
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div className={styles.groupL}>
           <label>Thời gian sau:</label>
@@ -44,19 +61,31 @@ function ConfigAudio(props: ConfigAudioProps) {
           <label className={styles.titleFieldXL}>
             File âm thanh cảnh báo xử lý người
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div>
           <label className={styles.titleFieldXL}>
             File âm thanh cảnh báo xử lý phương tiện
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div>
           <label className={styles.titleFieldXL}>
             File âm thanh cảnh báo xử lý người & PT
           </label>
-          <input type="file" accept="application/mp3, .mp3" />
+          <InputFileComponent 
+            acceptFileType="application/mp3, .mp3"
+            inputValue ={{value : value, setValue : setValueFile}}
+            inputFiles ={{value : file, setValue : setFile}}
+          />
         </div>
         <div>
           <label>Cảnh báo xử lý sau khi vượt quá:</label>
