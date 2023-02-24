@@ -49,7 +49,6 @@ app.post("/api/uploadfile", upload.single("myFile"), (req, res, next) => {
 //
 // route for file upload
 app.post("/api/checkFileExists", (req, res) => {
-  console.log(req.body);
   if (fs.existsSync(path.join(pathUpload, req.body.file))) {
     return res
       .status(409)
@@ -100,4 +99,18 @@ app.post("/api/readTextOfFile", (req, res) => {
     }
   });
   
+});
+
+app.get('/music', function (req, res) {
+  var pathFile = path.join(pathUpload, `${req.query.fileName}`);
+  if (!fs.existsSync(pathFile)) {
+    return res
+      .status(404)
+      .send({
+        message: `${req.query.fileName} không tồn tại!`,
+      });
+  }
+  res.download(path.join(pathUpload, `${req.query.fileName}`), function (err) {
+      // console.log(err);
+  });
 });

@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const urlApi: string = "http://localhost:15510/api";
+export const urlServerStatic = "http://localhost:15510"
 export async function CheckFile(fileName: String, pathUpload: string): Boolean {
   var isOk: Boolean = false;
   await axios

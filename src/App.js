@@ -14,11 +14,11 @@ import personPath from "./audio/person.mp3";
 import persontransportPath from "./audio/persontransport.mp3";
 import warningtransportPath from "./audio/warningtransport.mp3";
 import warningpersonPath from "./audio/warningperson.mp3";
-import ConfigContainer from './component/ConfigContainer';
-import ITimeRange from './util/inteface';
-import logo from './icon/logo.png'
+import ConfigContainer from "./component/ConfigContainer";
+import { ITimeRange, IConfigModel } from "./util/inteface";
+import logo from "./icon/logo.png";
 import { getConfigTime } from "./util/session";
-
+import { ReadTextOfFile, urlServerStatic } from "./util/api/fileApi";
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -32,7 +32,7 @@ function App() {
     maxPersion: 10,
   };
 
-  const defaultTime : ITimeRange[]=[
+  const defaultTime: ITimeRange[] = [
     {
       fromTime: "06:40",
       toTime: "07:10",
@@ -48,13 +48,61 @@ function App() {
   ];
   //timeRanges định nghĩa khung giờ cao điểm
   let timeRanges: ITimeRange[] = defaultTime;
-  timeRanges = getConfigTime();
-  if(!timeRanges){
-    timeRanges = defaultTime;
+  var configModel: IConfigModel = null;
+  async function readConfig() {
+    console.log("read config");
+    var result = await ReadTextOfFile("config.txt");
+    if (result) {
+      configModel = JSON.parse(result);
+      SetDataFromConfigModel();
+    }
+    if (!timeRanges) {
+      timeRanges = defaultTime;
+    }
   }
+  function IsNotNullOrEmpty(value: string) {
+    return value && value != undefined && value != null && value.length > 0;
+  }
+  function SetDataFromConfigModel() {
+    timeRanges = configModel.listTime;
+    current.maxWarning = configModel.countMax;
+    current.timeWait = configModel.timeDelay;
+    var pathAudio : string ='';
+    if (IsNotNullOrEmpty(configModel.audio.persionA)) {
+      pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionA}`;
+      audioPersion = new Audio(pathAudio);
+    }
+    
+    if (IsNotNullOrEmpty(configModel.audio.transportA)) {
+      pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.transportA}`;
+      audioTransport = new Audio(pathAudio);
+    }
+    
+    if (IsNotNullOrEmpty(configModel.audio.persionTransportA)) {
+      pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionTransportA}`;
+      audioTransport = new Audio(pathAudio);
+    }
+    
+    if (IsNotNullOrEmpty(configModel.audio.persionB)) {
+      pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionB}`;
+      audioWarningPerson = new Audio(pathAudio);
+    }
+    
+    if (IsNotNullOrEmpty(configModel.audio.transportB)) {
+      pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.transportB}`;
+      audioWarningTransport = new Audio(pathAudio);
+    }
+    pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionTransportB}`;
+    if (IsNotNullOrEmpty(configModel.audio.persionTransportB)) {
+      audioWarningTransport = new Audio(pathAudio);
+    }
+  }
+
   //Khởi tạo max =  default
   const [maxPerson, setmaxPerson] = useState(defaultMax.maxPersion); //Số lượng đối tượng là con người (Nếu lớn  hơn sẽ thông báo: Khu vực cổng trường xin mọi người hãy di chuyển tránh tắc nghẽn giao thông.)
   const [maxTransport, setMaxTransport] = useState(defaultMax.maxTransport); //Số lượng đối tượng là phương tiện tối đa có trong khung hình(Nếu lớn hơn sẽ thông báo: Yêu cầu phương tiện giao thông di chuyển nhanh qua khu vực cổng trường để đảm bảo an toàn giao thông.)
+  //
+  var personPath_server = `${urlServerStatic}\\music?fileName=persion`;
   //
   var audioTransport = new Audio(transportPath);
   var audioPersion = new Audio(personPath);
@@ -63,23 +111,23 @@ function App() {
   var audioWarningPerson = new Audio(warningpersonPath);
   // Main function
   const runMain = async () => {
-    
     const net = await cocossd.load();
     console.log("Handpose model loaded.");
+    await readConfig();
     //  Set thời gian re-load tìm kiếm người có trong khung hình đơn vị tính mili giây
     //  Mặc định 10ms sẽ load 1 lần
     setInterval(() => {
       detect(net);
     }, 10);
   };
-  let isEnabledAudio : Boolean = true;
+  let isEnabledAudio: Boolean = true;
   const playAudio = async (audio: Audio) => {
     if (isEnabledAudio) {
-      isEnabledAudio =   false ;
+      isEnabledAudio = false;
       await audio.play();
       //Dừng lại đợi tương ứng thời gian waitimeReadWarning mới phát thông báo tiếp theo nếu có cảnh báo
       await sleep(waitimeReadWarning);
-      isEnabledAudio =   true ;
+      isEnabledAudio = true;
     }
   };
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -122,6 +170,7 @@ function App() {
           item.class === "motorcycle"
         ) {
           if (item.class === "person") {
+            countPerson++; 
             countPerson++; //Tăng biến đếm  số người lên 1 đơn vị
           } else {
             countTransport++; //Tăng biến đếm  số phương tiện lên 1 đơn vị
@@ -137,49 +186,51 @@ function App() {
       const ctx = canvasRef.current.getContext("2d");
       drawRect(objectItems, ctx);
       //
-      checkActiveWarning(countPerson,countTransport);
+      checkActiveWarning(countPerson, countTransport);
       //
     }
   };
-  let countWarningTransport : number = 0;
-  let timeWarningTransportOld :  date = null;
+  let countWarningTransport: number = 0;
+  let timeWarningTransportOld: date = null;
   let countWarningPerson: number = 0;
   let timeWarningPersontOld: date = null;
-  let current ={
+  let current = {
     maxPerson: 0,
     maxTransport: 0,
-  }
+    maxWarning: 5,
+    timeWait: 20,
+  };
   //Tính toán để nhắc nhở TH:
-  function checkWarning(countPerson: number, countTransport : number): Boolean {
+  function checkWarning(countPerson: number, countTransport: number): Boolean {
     const currentDate = new Date();
     //Tính toán nhắc nhở đối tượng phương tiện
     //Trong trường hợp 05 lần phát cảnh báo mà phương tiện không di chuyển
     //Ứng dụng sẽ phát ra thông báo: "Nếu các phương tiện không ra khỏi khu vực này, gây ảnh hưởng ATGT, dữ liệu vi phạm sẽ được chuyển đến cơ quan Công an xử lý"
-    if (countTransport > maxTransport) {
+    if (countTransport > current.maxTransport) {
       //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningTransport >= 5) {
+      if (countWarningTransport >= current.maxWarning) {
         playAudio(audioWarningTransport);
         countWarningTransport = 0; // Sau khi nhắc nhở thì reset
-        timeWarningTransportOld =null;
+        timeWarningTransportOld = null;
         return true;
       }
       if (
         timeWarningTransportOld == null ||
-        currentDate - timeWarningTransportOld < 20 * 1000
+        currentDate - timeWarningTransportOld < current.timeWait * 1000
       ) {
         // Nhắc nhở  liên tiếp trong 20s
         countWarningTransport++;
       } else {
         countWarningTransport = 0;
-        timeWarningTransportOld =null;
+        timeWarningTransportOld = null;
       }
       timeWarningTransportOld = currentDate;
     }
     //Tính toán nhắc nhở đối tượng con người
     //TH 05 lần học sinh không giải tán vẫn tụ tập thì phát cảnh báo: "Đề nghị các em học sinh chấp hành tốt nội quy nhà trường, cố tình vi phạm dữ liệu hình ảnh sẽ được chuyển cho Nhà trường xử lý".
-    if (countPerson > maxPerson) {
+    if (countPerson > current.maxPerson) {
       //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningPerson >= 5) {
+      if (countWarningPerson >= current.maxWarning) {
         playAudio(audioWarningPerson);
         countWarningPerson = 0; // Sau khi nhắc nhở thì reset
         timeWarningPersontOld = null;
@@ -187,13 +238,13 @@ function App() {
       }
       if (
         timeWarningPersontOld == null ||
-        currentDate - timeWarningPersontOld < 20 * 1000
+        currentDate - timeWarningPersontOld < current.timeWait * 1000
       ) {
         // Nhắc nhở  liên tiếp   trong 20s
-        countWarningPerson ++;
+        countWarningPerson++;
       } else {
         countWarningPerson = 0;
-        timeWarningPersontOld =null;
+        timeWarningPersontOld = null;
       }
       timeWarningPersontOld = currentDate;
     }
@@ -220,19 +271,24 @@ function App() {
     current.maxPerson = timeRange.maxPersion;
     current.maxTransport = timeRange.maxTransport;
   }
-  function checkActiveWarning(countPerson : number, countTransport : number):  void {
+  function checkActiveWarning(
+    countPerson: number,
+    countTransport: number
+  ): void {
     //Set lại max theo khung giờ
     setMaxOnTime();
     //
-    if(!isEnabledAudio)
-    {
+    if (!isEnabledAudio) {
       return;
     }
     //
     if (checkWarning(countPerson, countTransport)) {
       return;
     }
-    if (countPerson > current.maxPerson && countTransport > current.maxTransport) {
+    if (
+      countPerson > current.maxPerson &&
+      countTransport > current.maxTransport
+    ) {
       playAudio(audioPersonTransport);
       return;
     }
