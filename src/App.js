@@ -170,7 +170,6 @@ function App() {
           item.class === "motorcycle"
         ) {
           if (item.class === "person") {
-            countPerson++; 
             countPerson++; //Tăng biến đếm  số người lên 1 đơn vị
           } else {
             countTransport++; //Tăng biến đếm  số phương tiện lên 1 đơn vị
