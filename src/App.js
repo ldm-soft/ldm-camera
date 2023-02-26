@@ -66,7 +66,7 @@ function App() {
   function SetDataFromConfigModel() {
     timeRanges = configModel.listTime;
     current.maxWarning = configModel.countMax;
-    current.timeWait = configModel.timeDelay;
+    current.timeDelay = configModel.timeDelay;
     var pathAudio : string ='';
     if (IsNotNullOrEmpty(configModel.audio.persionA)) {
       pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionA}`;
@@ -125,8 +125,8 @@ function App() {
     if (isEnabledAudio) {
       isEnabledAudio = false;
       await audio.play();
-      //Dừng lại đợi tương ứng thời gian waitimeReadWarning mới phát thông báo tiếp theo nếu có cảnh báo
-      await sleep(waitimeReadWarning);
+      //Dừng lại đợi tương ứng thời gian timeDelay mới phát thông báo tiếp theo nếu có cảnh báo
+      await sleep(current.timeDelay);
       isEnabledAudio = true;
     }
   };
@@ -197,7 +197,8 @@ function App() {
     maxPerson: 0,
     maxTransport: 0,
     maxWarning: 5,
-    timeWait: 20,
+    timeCheck: 20,
+    timeDelay: 10,
   };
   //Tính toán để nhắc nhở TH:
   function checkWarning(countPerson: number, countTransport: number): Boolean {
@@ -215,7 +216,7 @@ function App() {
       }
       if (
         timeWarningTransportOld == null ||
-        currentDate - timeWarningTransportOld < current.timeWait * 1000
+        currentDate - timeWarningTransportOld < current.timeCheck * 1000
       ) {
         // Nhắc nhở  liên tiếp trong 20s
         countWarningTransport++;
@@ -237,7 +238,7 @@ function App() {
       }
       if (
         timeWarningPersontOld == null ||
-        currentDate - timeWarningPersontOld < current.timeWait * 1000
+        currentDate - timeWarningPersontOld < current.timeCheck * 1000
       ) {
         // Nhắc nhở  liên tiếp   trong 20s
         countWarningPerson++;
