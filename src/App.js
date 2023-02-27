@@ -126,7 +126,7 @@ function App() {
       isEnabledAudio = false;
       await audio.play();
       //Dừng lại đợi tương ứng thời gian timeDelay mới phát thông báo tiếp theo nếu có cảnh báo
-      await sleep(current.timeDelay);
+      await sleep(current.timeDelay * 1000);
       isEnabledAudio = true;
     }
   };
