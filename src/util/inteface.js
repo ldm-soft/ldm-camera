@@ -42,6 +42,12 @@ export interface IConfigModel{
   };
   timeDelay: Number;
   countMax: Number;
+  warningMax: Number;
+}
+
+export interface IConfigIMGProps{
+  warningMax: IStage<Number>;
+  pathSave: IStage<String>;
 }
 
 export interface IConfig {

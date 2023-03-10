@@ -54,7 +54,7 @@ function App() {
     console.log("read config");
     var result = await ReadTextOfFile("config.txt");
     if (result) {
-      configModel = JSON.parse(result);
+      configModel = JSON.parse(result.data);
       SetDataFromConfigModel();
     }
     if (!timeRanges) {
@@ -66,8 +66,9 @@ function App() {
   }
   function SetDataFromConfigModel() {
     timeRanges = configModel.listTime;
-    current.maxWarning = configModel.countMax;
+    current.maxRemind = configModel.countMax;
     current.timeDelay = configModel.timeDelay;
+    current.maxWarning = configModel.warningMax;
     var pathAudio : string ='';
     if (IsNotNullOrEmpty(configModel.audio.persionA)) {
       pathAudio = `${urlServerStatic}\\music?fileName=${configModel.audio.persionA}`;
@@ -186,21 +187,26 @@ function App() {
       const ctx = canvasRef.current.getContext("2d");
       drawRect(objectItems, ctx);
       //
-      checkActiveWarning(countPerson, countTransport);
+      checkActiveRemind(countPerson, countTransport);
       //
     }
   };
-  let countWarningTransport: number = 0;
-  let timeWarningTransportOld: date = null;
-  let countWarningPerson: number = 0;
-  let timeWarningPersontOld: date = null;
+  let countRemindTransport: number = 0;
+  let timeRemindTransportOld: date = null;
+  let countRemindPerson: number = 0;
+  let timeRemindPersontOld: date = null;
   let current = {
     maxPerson: 0,
     maxTransport: 0,
-    maxWarning: 5,
+    maxRemind: 5,
     timeCheck: 20,
     timeDelay: 10,
+    maxWarning: 5,
   };
+  let warning =  {
+    person: 0,
+    transport: 0,
+  }
   //Tính toán để nhắc nhở TH:
   function checkWarning(countPerson: number, countTransport: number): Boolean {
     const currentDate = new Date();
@@ -208,46 +214,67 @@ function App() {
     //Trong trường hợp 05 lần phát cảnh báo mà phương tiện không di chuyển
     //Ứng dụng sẽ phát ra thông báo: "Nếu các phương tiện không ra khỏi khu vực này, gây ảnh hưởng ATGT, dữ liệu vi phạm sẽ được chuyển đến cơ quan Công an xử lý"
     if (countTransport > current.maxTransport) {
-      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningTransport >= current.maxWarning) {
-        playAudio(audioWarningTransport);
-        countWarningTransport = 0; // Sau khi nhắc nhở thì reset
-        timeWarningTransportOld = null;
-        return true;
-      }
       if (
-        timeWarningTransportOld == null ||
-        currentDate - timeWarningTransportOld < current.timeCheck * 1000
+        timeRemindTransportOld == null ||
+        currentDate - timeRemindTransportOld < current.timeCheck * 1000
       ) {
         // Nhắc nhở  liên tiếp trong 20s
-        countWarningTransport++;
+        countRemindTransport++;
       } else {
-        countWarningTransport = 0;
-        timeWarningTransportOld = null;
+        countRemindTransport = 0;
+        timeRemindTransportOld = null;
+        warning.transport = 0;
       }
-      timeWarningTransportOld = currentDate;
+      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
+      if (countRemindTransport >= current.maxRemind) {
+        playAudio(audioWarningTransport);
+        warning.transport++;
+        if(warning.transport >= current.maxWarning){
+          //Lưu hình ảnh
+          capture();
+          warning.transport = 0;
+          warning.person = 0;
+          countRemindTransport = 0; // Sau khi nhắc nhở thì reset
+          timeRemindTransportOld = null;
+        }
+        return true;
+      }
+      
+      timeRemindTransportOld = currentDate;
     }
     //Tính toán nhắc nhở đối tượng con người
     //TH 05 lần học sinh không giải tán vẫn tụ tập thì phát cảnh báo: "Đề nghị các em học sinh chấp hành tốt nội quy nhà trường, cố tình vi phạm dữ liệu hình ảnh sẽ được chuyển cho Nhà trường xử lý".
+    console.log(`${countPerson}-maxPerson-${current.maxPerson}`)
     if (countPerson > current.maxPerson) {
-      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
-      if (countWarningPerson >= current.maxWarning) {
-        playAudio(audioWarningPerson);
-        countWarningPerson = 0; // Sau khi nhắc nhở thì reset
-        timeWarningPersontOld = null;
-        return true;
-      }
       if (
-        timeWarningPersontOld == null ||
-        currentDate - timeWarningPersontOld < current.timeCheck * 1000
+        timeRemindPersontOld == null ||
+        currentDate - timeRemindPersontOld < current.timeCheck * 1000
       ) {
         // Nhắc nhở  liên tiếp   trong 20s
-        countWarningPerson++;
+        countRemindPerson++;
       } else {
-        countWarningPerson = 0;
-        timeWarningPersontOld = null;
+        countRemindPerson = 0;
+        warning.person = 0;
+        timeRemindPersontOld = null;
       }
-      timeWarningPersontOld = currentDate;
+      console.log(`${countPerson}-countRemindPerson-${countRemindPerson}`)
+      //Trường hợp nhắc nhở > 5 lần mà không di chuyển)
+      if (countRemindPerson >= current.maxRemind) {
+        playAudio(audioWarningPerson);
+        warning.person++;
+        if(warning.person >= current.maxWarning){
+          //Lưu hình ảnh
+          capture();
+          warning.person = 0;
+          warning.transport = 0;
+          countRemindPerson = 0; // Sau khi nhắc nhở thì reset
+          timeRemindPersontOld = null;
+        }
+        
+        return true;
+      }
+      
+      timeRemindPersontOld = currentDate;
     }
     return false;
   }
@@ -272,7 +299,7 @@ function App() {
     current.maxPerson = timeRange.maxPersion;
     current.maxTransport = timeRange.maxTransport;
   }
-  function checkActiveWarning(
+  function checkActiveRemind(
     countPerson: number,
     countTransport: number
   ): void {
@@ -364,7 +391,7 @@ function App() {
       buildFileNameWithTime('IMG','png'),
       pictureSrc
     );
-    console.log("Lưu thành công!!!");
+    console.log("Lưu thành công(capture)!!!");
   })
   return (
     <div className="App">

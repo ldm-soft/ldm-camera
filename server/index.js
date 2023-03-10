@@ -29,6 +29,7 @@ app.get("/api", (req, res) => {
   res.json({ message: "Hello from server!" });
 });
 const pathUpload = path.join(__dirname, "upload");
+const pathUploadIMG = path.join(__dirname, "upload/IMG");
 // setup multer for file upload
 var storage = multer.diskStorage({
   destination: "./upload",
@@ -90,7 +91,8 @@ app.post("/api/readTextOfFile", (req, res) => {
       .status(200)
       .send({
         message: `ok`,
-        text: contents.toString() 
+        text: contents.toString(),
+        pathIMG: pathUploadIMG,
       });
     }
     else
@@ -116,7 +118,6 @@ app.get('/music', function (req, res) {
 });
 //Image
 const uploadIMG = multer({ storage: storageIMG });
-const pathUploadIMG = path.join(__dirname, "upload/IMG");
 // setup multer for file upload
 var storageIMG = multer.diskStorage({
   destination: "./upload/IMG",

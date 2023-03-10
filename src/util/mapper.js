@@ -1,5 +1,5 @@
-import {IConfigAudio, IConfigModel, ITimeRange} from "./inteface";
-export function MapToConfigModel(audio: IConfigAudio, timeRanges: ITimeRange[]) : IConfigModel
+import {IConfigAudio, IConfigModel, ITimeRange, IConfigIMGProps} from "./inteface";
+export function MapToConfigModel(audio: IConfigAudio, timeRanges: ITimeRange[], img: IConfigIMGProps) : IConfigModel
 {
     return {
         audio:{
@@ -13,5 +13,6 @@ export function MapToConfigModel(audio: IConfigAudio, timeRanges: ITimeRange[]) 
         countMax: audio.countMax.value,
         timeDelay:  audio.timeDelay.value,
         listTime: timeRanges,
+        warningMax: img.warningMax.value,
     }
 }

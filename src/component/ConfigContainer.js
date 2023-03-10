@@ -19,7 +19,7 @@ import ConfigAudio from "./ConfigAudio";
 import ConfigImage from "./ConfigImage";
 import { MapToConfigModel } from "../util/mapper";
 import { ReadTextOfFile, SaveTextToFile } from "../util/api/fileApi";
-import {IConfigModel} from "../util/inteface";
+import {IConfigModel, IConfigIMGProps} from "../util/inteface";
 
 function ConfigContainer() {
   //    resetSession();
@@ -46,6 +46,13 @@ function ConfigContainer() {
   //
   const [timeDelay, setTimeDelay] = useState(10);
   const [countMax, setCountMax] = useState(5);
+  //
+  const [warningMax, setWarningMax] = useState(5);
+  const [pathSave, setPathSave] = useState("");
+  var configIMG : IConfigIMGProps ={
+    warningMax:{ value: warningMax , setValue : setWarningMax},
+    pathSave: {value: pathSave, setValue: setPathSave},
+  }
   //
   var configAudio: IConfigAudio = {
     audioPersonA: {
@@ -143,7 +150,8 @@ function ConfigContainer() {
     var result = await ReadTextOfFile("config.txt");
     if(result)
     {
-      var model : IConfigModel = JSON.parse(result);
+      var model : IConfigModel = JSON.parse(result.data);
+      setPathSave(result.pathIMG);
       SetDataFromConfigModel(model);
     }
   }
@@ -159,6 +167,7 @@ function ConfigContainer() {
     setAudioValueTransportB(configModel.audio.transportB);
     setAudioValuePersonTransportA(configModel.audio.persionTransportA);
     setAudioValuePersonTransportB(configModel.audio.persionTransportB);
+    setWarningMax(configModel.warningMax);
   }
   //
   function onChangeCheckTime(e) {
@@ -177,7 +186,7 @@ function ConfigContainer() {
   async function onClickSave() {
     var result = await SaveTextToFile(
       "config.txt",
-      JSON.stringify(MapToConfigModel(configAudio, timeRanges))
+      JSON.stringify(MapToConfigModel(configAudio, timeRanges, configIMG))
     );
     window.alert("Lưu thành công!!!");
     console.log(result);
@@ -231,10 +240,8 @@ function ConfigContainer() {
         {config.isCustom.value && <ConfigAudio configData={configAudio} />}
         {config.isCustom.value && (
           <ConfigImage
-            inputImgPath={{
-              fieldItem: { value: imgTitle, setValue: setImgTitle },
-              valueItem: { value: imgFile, setValue: setImgFile },
-            }}
+            warningMax={configIMG.warningMax}
+            pathSave={configIMG.pathSave}
           />
         )}
         {config.isCustom.value && (

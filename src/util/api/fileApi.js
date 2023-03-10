@@ -69,9 +69,15 @@ export async function SaveTextToFile(fileName: String, bodyData: String): Boolea
     });
   return isOk;
 }
-
-export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  false): String {
-  var result : String ='';
+interface IResult{
+  data: String,
+  pathIMG: String
+}
+export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  false): IResult {
+  var result : IResult = {
+    data: '',
+    pathIMG: ''
+  };
   await axios
     .post(
       `${urlApi}/readTextOfFile`,
@@ -85,8 +91,10 @@ export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  fa
       }
     )
     .then((res) => {
-      console.log(res.data)
-      result = res.data.text;
+      result = {
+        data: res.data.text,
+        pathIMG: res.data.pathIMG,
+      };
     })
     .catch(function (error) {
       console.log(error)
