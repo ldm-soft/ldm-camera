@@ -136,7 +136,7 @@ app.post("/api/upload/IMG", (req, res) => {
   }
   var pathFile = path.join(pathUploadIMG, req.body.filename);
   var data = (req.body.data).replace(/^data:image\/\w+;base64,/, "");
-  var buf = new Buffer(data, 'base64');
+  var buf = new Buffer.from(data, 'base64');
   fs.writeFile(pathFile, buf, {flag:'w'}, function(err) {
     if(err){
       console.log(err);

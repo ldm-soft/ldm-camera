@@ -425,10 +425,10 @@ function App() {
             height: "100%",
           }}
         />
-        <button style={{ right: "5px", bottom: "5px", position: "fixed" }} >
+        <button style={{ right: "5px", bottom: "5px", position: "fixed", minWidth:'50px'  }} >
           <a href="./config">Thiết lập</a>
         </button>
-        <button style={{ left: "5px", bottom: "5px", position: "fixed" }} onClick ={()=> {capture()}} >
+        <button style={{ left: "5px", bottom: "5px", position: "fixed", minWidth:'50px' }} onClick ={()=> {capture()}} >
           [Chụp]
         </button>
       </header>
