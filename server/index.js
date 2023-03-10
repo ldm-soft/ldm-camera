@@ -6,8 +6,8 @@ var fs = require("fs");
 const PORT = process.env.PORT || 15510;
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true }));
+app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.raw());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -113,4 +113,39 @@ app.get('/music', function (req, res) {
   res.download(path.join(pathUpload, `${req.query.fileName}`), function (err) {
       // console.log(err);
   });
+});
+//Image
+const uploadIMG = multer({ storage: storageIMG });
+const pathUploadIMG = path.join(__dirname, "upload/IMG");
+// setup multer for file upload
+var storageIMG = multer.diskStorage({
+  destination: "./upload/IMG",
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+
+//Save text to file
+app.post("/api/upload/IMG", (req, res) => {
+  if (req.body.filename === null || req.body.data === null) {
+    return res
+      .status(404)
+      .send({
+        message: `Post file không hợp lệ!`,
+      });
+  }
+  var pathFile = path.join(pathUploadIMG, req.body.filename);
+  var data = (req.body.data).replace(/^data:image\/\w+;base64,/, "");
+  var buf = new Buffer(data, 'base64');
+  fs.writeFile(pathFile, buf, {flag:'w'}, function(err) {
+    if(err){
+      console.log(err);
+    }
+    else
+    {
+      console.log('The file IMG has been saved!');
+      res.sendStatus(200);
+    }
+  });
+  
 });

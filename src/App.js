@@ -18,7 +18,8 @@ import ConfigContainer from "./component/ConfigContainer";
 import { ITimeRange, IConfigModel } from "./util/inteface";
 import logo from "./icon/logo.png";
 import { getConfigTime } from "./util/session";
-import { ReadTextOfFile, urlServerStatic } from "./util/api/fileApi";
+import { ReadTextOfFile, SaveBase64ToIMG, urlServerStatic } from "./util/api/fileApi";
+import { buildFileNameWithTime } from "./util/helper";
 function App() {
   const webcamRef = useRef(null);
   const canvasRef = useRef(null);
@@ -356,6 +357,15 @@ function App() {
     setIndexDevice(indexNew);
     setDeviceId(devices[indexNew].deviceId);
   }
+  //Save img
+  const capture =  React.useCallback(async () => {
+    const pictureSrc = webcamRef.current.getScreenshot();
+    var result = await SaveBase64ToIMG(
+      buildFileNameWithTime('IMG','png'),
+      pictureSrc
+    );
+    console.log("Lưu thành công!!!");
+  })
   return (
     <div className="App">
       <Helmet>
@@ -398,6 +408,7 @@ function App() {
             width: "100%",
             height: "100%",
           }}
+          screenshotFormat="image/jpeg"
         />
 
         <canvas
@@ -414,8 +425,11 @@ function App() {
             height: "100%",
           }}
         />
-        <button style={{ right: "5px", bottom: "5px", position: "fixed" }}>
+        <button style={{ right: "5px", bottom: "5px", position: "fixed" }} >
           <a href="./config">Thiết lập</a>
+        </button>
+        <button style={{ left: "5px", bottom: "5px", position: "fixed" }} onClick ={()=> {capture()}} >
+          [Chụp]
         </button>
       </header>
     </div>

@@ -102,4 +102,29 @@ export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  fa
     });
   return result;
 }
+//
+export async function SaveBase64ToIMG(fileName: String, bodyData: String): Boolean {
+  var isOk: Boolean = false;
+  await axios
+    .post(
+      `${urlApi}/upload/IMG`,
+      {
+        filename: fileName,
+        data: bodyData,
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    )
+    .then((res) => {
+      isOk = true;
+    })
+    .catch(function (error) {
+      
+    });
+  return isOk;
+}
+//
 export default null;
