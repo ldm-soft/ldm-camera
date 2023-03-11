@@ -148,7 +148,7 @@ function ConfigContainer() {
   async function readText() {
     console.log("read");
     var result = await ReadTextOfFile("config.txt");
-    if(result)
+    if(result && result.isOk)
     {
       var model : IConfigModel = JSON.parse(result.data);
       setPathSave(result.pathIMG);

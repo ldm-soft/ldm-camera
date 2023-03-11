@@ -70,11 +70,13 @@ export async function SaveTextToFile(fileName: String, bodyData: String): Boolea
   return isOk;
 }
 interface IResult{
+  isOk: Boolean,
   data: String,
   pathIMG: String
 }
 export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  false): IResult {
   var result : IResult = {
+    isOk: false,
     data: '',
     pathIMG: ''
   };
@@ -92,12 +94,13 @@ export async function ReadTextOfFile(fileName: String, showAlert?: Boolean =  fa
     )
     .then((res) => {
       result = {
+        isOk: res.status === 200 ,
         data: res.data.text,
         pathIMG: res.data.pathIMG,
       };
     })
     .catch(function (error) {
-      console.log(error)
+      console.log('error', error)
       if(error.response && error.response.status)
       {
         switch (error.response.status) {

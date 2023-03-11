@@ -53,7 +53,8 @@ function App() {
   async function readConfig() {
     console.log("read config");
     var result = await ReadTextOfFile("config.txt");
-    if (result) {
+    console.log(result)
+    if (result && result.isOk) {
       configModel = JSON.parse(result.data);
       SetDataFromConfigModel();
     }
