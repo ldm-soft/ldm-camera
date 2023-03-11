@@ -188,7 +188,13 @@ function ConfigContainer() {
       "config.txt",
       JSON.stringify(MapToConfigModel(configAudio, timeRanges, configIMG))
     );
-    window.alert("Lưu thành công!!!");
+    if(result)
+    {
+      window.alert("Lưu thành công.");
+    }
+    else{
+      window.alert("Lưu lỗi.!!!");
+    }
     console.log(result);
   }
   return (
